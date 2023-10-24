@@ -59,16 +59,13 @@ class MainGUI():
         canvas.pack()
 
 
-        sc = Scenario(50, 50)
+        sc = Scenario(5, 5)
 
-        sc.grid[3, 5] = Scenario.NAME2ID['TARGET']
-        sc.grid[4, 5] = Scenario.NAME2ID['TARGET']
-        sc.grid[2, 5] = Scenario.NAME2ID['TARGET']
-
+        sc.grid[3, 2] = Scenario.NAME2ID['TARGET']
+ 
         sc.pedestrians = [
             Pedestrian((1, 2), 2.3),
-            Pedestrian((1, 4), 2.1),
-            Pedestrian((8, 7), 2.1),
+
         ]
 
 

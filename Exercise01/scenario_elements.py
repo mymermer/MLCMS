@@ -46,10 +46,12 @@ class Pedestrian:
         next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0],self._position[1])
         next_pos = self._position
         for (n_x, n_y) in neighbors:
+            print(scenario.dijkstra.estimate_cost(n_x, n_y))
             if next_cell_distance > scenario.dijkstra.estimate_cost(n_x, n_y):
                 next_pos = (n_x, n_y)
                 next_cell_distance = scenario.dijkstra.estimate_cost(n_x, n_y)
         self._position = next_pos
+        print(next_cell_distance)
 
 
 class Scenario:
@@ -103,7 +105,7 @@ class Scenario:
 
     def update_cost(self):
         """
-        Uses dijkstra algorthim t calculate cost of the plain.
+        Uses dijkstra algorthim to calculate cost of the plain.
         This does not take obstacles into account.
         :returns: The distance for every grid cell, as a np.ndarray.
         """
@@ -117,7 +119,7 @@ class Scenario:
 
         print(targets)
         self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets, self.check_for_obstacle)# cost regarding to Dijkstra_algorithm
-        self.dijkstra.expanding_point_initlizer()
+        self.dijkstra.execute()
         print(self.dijkstra.cost_matrix)
  
 

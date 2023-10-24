@@ -1,6 +1,8 @@
 import numpy as np
 import math
 import sys
+from queue import PriorityQueue
+
 
 
 sys. setrecursionlimit(50000)
@@ -18,49 +20,31 @@ class Dijkstra_algorithm:
 
 
 
-    def expanding_point_initlizer(self):
+    def execute(self):
+
+        queue=PriorityQueue()
+        sqrt2=round(math.sqrt(2),2)
+
         for target in self.target_locations:
-            print("next target")
             x,y = target[0], target[1]
             self.cost_matrix[x][y]=0
+            queue.put((0,(x,y)))
+
+
+        while not queue.empty():
+            cost,(x,y) = queue.get()
             for i in [-1,0,1]: #will be used for x
                 for j in [-1,0,1]: # will be used for y
-                    if i==0 and j==0: continue #skip the target point
+                    if i==0 and j==0: continue #skip the current point
                     if x+i>=0 and x+i<self.height and y+j>=0 and y+j<self.width and not self.check_for_obstacle[x+i][y+j]:
                         if (i*j!=0): #if true, then diagonal
-                            if self.cost_matrix[x+i][y+j] > round(math.sqrt(2),2): #we found a shorter path!!
-                                self.cost_matrix[x+i][y+j]=round(math.sqrt(2),2) #diagonal moves are sqrt(2) long.
-                                self.expanding_point(x+i,y+j,round(math.sqrt(2),2))  #we will start recursive for this point
-                            else: pass #this point is already visited, for smaller number so we don't need to look at it again and again.
+                            if self.cost_matrix[x+i][y+j] >sqrt2+cost : 
+                                self.cost_matrix[x+i][y+j]=sqrt2+cost #diagonal moves are sqrt(2) long.
+                                queue.put((sqrt2+cost, (x+i,y+j))) 
                         else:  
-                            if self.cost_matrix[x+i][y+j] > 1 : #we found a shorter path!!
-                                self.cost_matrix[x+i][y+j]=1
-                                self.expanding_point(x+i,y+j,1)
-                            else: pass #this point is already visited, for smaller number so we don't need to look at it again and again.
-
-        
-            
-            
-
-    def expanding_point(self,x,y, current_cost): # need to be recursive, because number of next point will increase
-        # if(current_cost>self.width*math.sqrt(2)): 
-        #     print(self.cost_matrix)
-        for i in [-1,0,1]: #will be used for x
-                for j in [-1,0,1]: # will be used for y
-                    if i==0 and j==0: continue #skip the current point, it already calculated
-
-                    if x+i>=0 and x+i<self.height and y+j>=0 and y+j<self.width and not self.check_for_obstacle[x+i][y+j]:
-                    
-                        if (i*j!=0): #if true, then diagonal
-                            if self.cost_matrix[x+i][y+j] > round(math.sqrt(2),2)+ current_cost: #we found a shorter path!!
-                                self.cost_matrix[x+i][y+j]= round(math.sqrt(2),2) + current_cost #diagonal moves are sqrt(2) long.
-                                self.expanding_point(x+i,y+j,round(math.sqrt(2),2) + current_cost)  #we will start recursive for this point
-                            else: pass #this point is already visited, for smaller number so we don't need to look at it again and again.
-                        else:  
-                            if self.cost_matrix[x+i][y+j] > 1 + current_cost: #we found a shorter path!!
-                                self.cost_matrix[x+i][y+j]=1+current_cost
-                                self.expanding_point(x+i,y+j,1+current_cost)
-                            else: pass #this point is already visited, for smaller number so we don't need to look at it again and again.
+                            if self.cost_matrix[x+i][y+j] > 1+cost :
+                                self.cost_matrix[x+i][y+j]=1+cost
+                                queue.put((1+cost,(x+i,y+j)))
 
 
 
