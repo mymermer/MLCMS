@@ -59,30 +59,30 @@ class MainGUI():
         canvas.pack()
 
 
-        sc = Scenario(5, 5)
+        # sc = Scenario(5, 5)
 
-        sc.grid[3, 2] = Scenario.NAME2ID['TARGET']
+        # sc.grid[3, 2] = Scenario.NAME2ID['TARGET']
  
-        sc.pedestrians = [
-            Pedestrian((1, 2), 2.3),
-
-        ]
-
-
-
-
-
-        # sc = Scenario(100, 100)
-
-        # sc.grid[23, 25] = Scenario.NAME2ID['TARGET']
-        # sc.grid[23, 45] = Scenario.NAME2ID['TARGET']
-        # sc.grid[43, 55] = Scenario.NAME2ID['TARGET']
-
         # sc.pedestrians = [
-        #     Pedestrian((31, 2), 2.3),
-        #     Pedestrian((1, 10), 2.1),
-        #     Pedestrian((80, 70), 2.1),
+        #     Pedestrian((1, 2), 2.3),
+
         # ]
+
+
+
+
+
+        sc = Scenario(100, 100)
+
+        sc.grid[23, 25] = Scenario.NAME2ID['TARGET']
+        sc.grid[23, 45] = Scenario.NAME2ID['TARGET']
+        sc.grid[43, 55] = Scenario.NAME2ID['TARGET']
+
+        sc.pedestrians = [
+            Pedestrian((31, 2), 2.3),
+            Pedestrian((1, 10), 2.1),
+            Pedestrian((80, 70), 2.1),
+        ]
 
         # can be used to show pedestrians and targets
         sc.to_image(canvas, canvas_image)

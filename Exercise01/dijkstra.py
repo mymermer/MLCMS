@@ -47,22 +47,44 @@ class Dijkstra_algorithm:
                                 queue.put((1+cost,(x+i,y+j)))
 
 
+        self.cost_matrix = self.cost_matrix.T
+
+
 
     def estimate_cost(self,x,y): #Warning: This does not consider interaction between people, only cost for dijkstra's algorithm
         
-        distance1= math.sqrt((math.ceil(x)-x )**2 +   (math.ceil(y)-y)**2)
-        distance2= math.sqrt((math.floor(x)-x)**2 +   (math.ceil(y)-y)**2)
-        distance3= math.sqrt((math.ceil(x)-x )**2 +   (math.floor(y)-y)**2)
-        distance4= math.sqrt((math.floor(x)-x)**2 +   (math.floor(y) -y)**2)
+        if x%1==0 and y%1==0:
+            print(self.cost_matrix[x,y],x,y)
+            return self.cost_matrix[x,y]
+        elif x%1==0:
+            distance1=abs(math.ceil(y)-y)
+            distance2=abs(math.floor(y)-y)
 
-        if distance1==0: return self.cost_matrix[math.ceil(x)]  [math.ceil(y)]  #avoid division by zero errors
-        if distance2==0:return self.cost_matrix[math.floor(x)] [math.floor(y)]
-        if distance3==0: return self.cost_matrix[math.ceil(x)]  [math.ceil(y)]  
-        if distance4==0: return self.cost_matrix[math.floor(x)] [math.floor(y)] 
+            effect1= self.cost_matrix[x]  [math.ceil(y)]   /  distance1
+            effect2=  self.cost_matrix[x] [math.floor(y)] /  distance2
+            
+            return (effect1+effect2) / (1/distance1+1/distance2)
 
-        effect1= self.cost_matrix[math.ceil(x)]  [math.ceil(y)]   /  distance1
-        effect2=  self.cost_matrix[math.floor(x)] [math.floor(y)] /  distance2
-        effect3= self.cost_matrix[math.ceil(x)]  [math.ceil(y)]   /  distance3
-        effect4= self.cost_matrix[math.floor(x)] [math.floor(y)]  /  distance4
 
-        return (effect1+effect2+effect3+effect4)/(1/distance1+1/distance2+1/distance3+1/distance4)
+        elif y%1==0:
+            distance1=abs(math.ceil(x)-x)
+            distance2=abs(math.floor(x)-x)
+
+            effect1= self.cost_matrix[math.ceil(x)]  [y]   /  distance1
+            effect2=  self.cost_matrix[math.floor(x)] [y] /  distance2
+            
+            return (effect1+effect2) / (1/distance1+1/distance2)
+
+        
+        else:
+            distance1= math.sqrt((math.ceil(x)-x )**2 +   (math.ceil(y)-y)**2)
+            distance2= math.sqrt((math.floor(x)-x)**2 +   (math.ceil(y)-y)**2)
+            distance3= math.sqrt((math.ceil(x)-x )**2 +   (math.floor(y)-y)**2)
+            distance4= math.sqrt((math.floor(x)-x)**2 +   (math.floor(y) -y)**2)
+
+            effect1= self.cost_matrix[math.ceil(x)]  [math.ceil(y)]   /  distance1
+            effect2=  self.cost_matrix[math.floor(x)] [math.floor(y)] /  distance2
+            effect3= self.cost_matrix[math.ceil(x)]  [math.ceil(y)]   /  distance3
+            effect4= self.cost_matrix[math.floor(x)] [math.floor(y)]  /  distance4
+
+            return (effect1+effect2+effect3+effect4)/(1/distance1+1/distance2+1/distance3+1/distance4)

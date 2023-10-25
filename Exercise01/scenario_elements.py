@@ -34,7 +34,9 @@ class Pedestrian:
             if 0 <= x + self._position[0] < scenario.width and 0 <= y + self._position[1] < scenario.height and np.abs(x) + np.abs(y) > 0
         ]
 
-    def update_step(self, scenario):
+ 
+    
+    def update_step(self, scenario: "Scenario"):
         """
         Moves to the cell by cost.
         This does not take obstacles or other pedestrians into account.
@@ -43,8 +45,11 @@ class Pedestrian:
         :param scenario: The current scenario instance.
         """
         neighbors = self.get_neighbors(scenario)
-        next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0],self._position[1])
         next_pos = self._position
+        next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0],self._position[1])
+        for x in scenario.dijkstra.cost_matrix[0]:
+            print (x)
+
         for (n_x, n_y) in neighbors:
             print(scenario.dijkstra.estimate_cost(n_x, n_y))
             if next_cell_distance > scenario.dijkstra.estimate_cost(n_x, n_y):
@@ -52,6 +57,7 @@ class Pedestrian:
                 next_cell_distance = scenario.dijkstra.estimate_cost(n_x, n_y)
         self._position = next_pos
         print(next_cell_distance)
+        
 
 
 class Scenario:
@@ -90,16 +96,10 @@ class Scenario:
         self.grid = np.zeros((width, height))
         self.pedestrians = []
 
-        targets = []
-        for x in range(self.width):
-            for y in range(self.height):
-                if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
-                    targets.append([y, x])  # y and x are flipped because they are in image space.
-
-
         #there might be problem in deciding height, width in my coding, however, if grid is square it won't be problem.
         #obsticales are not yet implemented!!*********************************************
         self.check_for_obstacle = np.zeros((height, width))
+        self.dijkstra= None
         
         
 
