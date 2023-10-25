@@ -20,6 +20,7 @@ class Dijkstra_algorithm:
 
 
 
+
     def execute(self):
 
         queue=PriorityQueue()
@@ -31,12 +32,16 @@ class Dijkstra_algorithm:
             queue.put((0,(x,y)))
 
 
+
+
         while not queue.empty():
             cost,(x,y) = queue.get()
             for i in [-1,0,1]: #will be used for x
                 for j in [-1,0,1]: # will be used for y
                     if i==0 and j==0: continue #skip the current point
+
                     if x+i>=0 and x+i<self.height and y+j>=0 and y+j<self.width and not self.check_for_obstacle[x+i][y+j]:
+                        
                         if (i*j!=0): #if true, then diagonal
                             if self.cost_matrix[x+i][y+j] >sqrt2+cost : 
                                 self.cost_matrix[x+i][y+j]=sqrt2+cost #diagonal moves are sqrt(2) long.
@@ -47,14 +52,16 @@ class Dijkstra_algorithm:
                                 queue.put((1+cost,(x+i,y+j)))
 
 
+
         self.cost_matrix = self.cost_matrix.T
+        
+
 
 
 
     def estimate_cost(self,x,y): #Warning: This does not consider interaction between people, only cost for dijkstra's algorithm
         
         if x%1==0 and y%1==0:
-            print(self.cost_matrix[x,y],x,y)
             return self.cost_matrix[x,y]
         elif x%1==0:
             distance1=abs(math.ceil(y)-y)

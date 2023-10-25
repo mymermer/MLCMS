@@ -78,6 +78,53 @@ class MainGUI():
         sc.grid[23, 45] = Scenario.NAME2ID['TARGET']
         sc.grid[43, 55] = Scenario.NAME2ID['TARGET']
 
+
+        #dummy obstacle numbers
+
+        
+
+        sc.grid [23,24] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [23,26] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [24,24] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [24,25] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [24,26] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [22,24] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [22,25] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [22,26] = Scenario.NAME2ID["OBSTACLE"]
+
+
+
+        sc.grid [11,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [12,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [13,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [14,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [15,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [16,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [17,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [18,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [19,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [20,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [21,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [22,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [23,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [24,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [25,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [26,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [27,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [28,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [29,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [30,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [31,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [32,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [33,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [35,1] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [34,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [35,2] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [35,3] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [35,4] = Scenario.NAME2ID["OBSTACLE"]
+        sc.grid [35,0] = Scenario.NAME2ID["OBSTACLE"]
+
+
         sc.pedestrians = [
             Pedestrian((31, 2), 2.3),
             Pedestrian((1, 10), 2.1),

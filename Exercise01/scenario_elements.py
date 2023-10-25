@@ -47,16 +47,12 @@ class Pedestrian:
         neighbors = self.get_neighbors(scenario)
         next_pos = self._position
         next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0],self._position[1])
-        for x in scenario.dijkstra.cost_matrix[0]:
-            print (x)
 
         for (n_x, n_y) in neighbors:
-            print(scenario.dijkstra.estimate_cost(n_x, n_y))
             if next_cell_distance > scenario.dijkstra.estimate_cost(n_x, n_y):
                 next_pos = (n_x, n_y)
                 next_cell_distance = scenario.dijkstra.estimate_cost(n_x, n_y)
         self._position = next_pos
-        print(next_cell_distance)
         
 
 
@@ -97,8 +93,6 @@ class Scenario:
         self.pedestrians = []
 
         #there might be problem in deciding height, width in my coding, however, if grid is square it won't be problem.
-        #obsticales are not yet implemented!!*********************************************
-        self.check_for_obstacle = np.zeros((height, width))
         self.dijkstra= None
         
         
@@ -118,9 +112,17 @@ class Scenario:
             return np.zeros((self.width, self.height))
 
         print(targets)
-        self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets, self.check_for_obstacle)# cost regarding to Dijkstra_algorithm
+        
+        check_for_obstacle =np.zeros((self.width,self.height))
+
+        for x in range(self.width):
+            for y in range(self.height):
+                    check_for_obstacle[y][x] = bool(self.grid[x, y] == Scenario.NAME2ID['OBSTACLE'])
+
+
+        self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets, check_for_obstacle)# cost regarding to Dijkstra_algorithm
         self.dijkstra.execute()
-        print(self.dijkstra.cost_matrix)
+    
  
 
 
