@@ -35,20 +35,24 @@ class Pedestrian:
 
     def update_step(self, scenario):
         """
-        Moves to the cell with the lowest distance to the target.
-        This does not take obstacles or other pedestrians into account.
-        Pedestrians can occupy the same cell.
-
+        Moves to the cell with the lowest distance while avoiding obstacles.
         :param scenario: The current scenario instance.
         """
         neighbors = self.get_neighbors(scenario)
-        next_cell_distance = scenario.target_distance_grids[self._position[0]][self._position[1]]
+        current_cell_distance = scenario.target_distance_grids[self._position[0]][self._position[1]]
         next_pos = self._position
+
+        # Find the neighboring cell with the lowest distance while avoiding obstacles
         for (n_x, n_y) in neighbors:
-            if next_cell_distance > scenario.target_distance_grids[n_x, n_y]:
-                next_pos = (n_x, n_y)
-                next_cell_distance = scenario.target_distance_grids[n_x, n_y]
-        self._position = next_pos
+            neighbor_distance = scenario.target_distance_grids[n_x][n_y]
+            if neighbor_distance < current_cell_distance:
+                if scenario.grid[n_x][n_y] != Scenario.NAME2ID['OBSTACLE']:
+                    next_pos = (n_x, n_y)
+                    current_cell_distance = neighbor_distance
+
+        # Check if the next cell is not an obstacle before updating position
+        if scenario.grid[next_pos[0]][next_pos[1]] != Scenario.NAME2ID['OBSTACLE']:
+            self._position = next_pos
 
 
 class Scenario:
@@ -95,28 +99,44 @@ class Scenario:
     def update_target_grid(self):
         """
         Computes the shortest distance from every grid point to the nearest target cell.
-        This does not take obstacles into account.
+        Obstacles are given a very high cost.
         :returns: The distance for every grid cell, as a np.ndarray.
         """
         targets = []
+        obstacles = []
         for x in range(self.width):
             for y in range(self.height):
-                if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
+                cell_value = self.grid[x, y]
+                if cell_value == Scenario.NAME2ID['TARGET']:
                     targets.append([y, x])  # y and x are flipped because they are in image space.
+                elif cell_value == Scenario.NAME2ID['OBSTACLE']:
+                    obstacles.append([y, x])
+
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
 
         targets = np.row_stack(targets)
+        obstacles = np.row_stack(obstacles) if obstacles else None
+
         x_space = np.arange(0, self.width)
         y_space = np.arange(0, self.height)
         xx, yy = np.meshgrid(x_space, y_space)
         positions = np.column_stack([xx.ravel(), yy.ravel()])
 
-        # after the target positions and all grid cell positions are stored,
-        # compute the pair-wise distances in one step with scipy.
-        distances = scipy.spatial.distance.cdist(targets, positions)
 
-        # now, compute the minimum over all distances to all targets.
+        # Calculate pair-wise distances
+        distances_to_targets = scipy.spatial.distance.cdist(targets, positions)
+        if obstacles is not None:
+            distances_to_obstacles = scipy.spatial.distance.cdist(obstacles, positions)
+
+            # Setting a high cost for obstacles
+            max_obstacle_distance = 1000
+            obstacle_costs = np.max(distances_to_obstacles, axis=0)
+            distances = np.where(obstacle_costs == 0, max_obstacle_distance, distances_to_targets)
+        else:
+            distances = distances_to_targets
+
+        # Compute the minimum distance over all distances to all targets.
         distances = np.min(distances, axis=0)
 
         return distances.reshape((self.width, self.height))
