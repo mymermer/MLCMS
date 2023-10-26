@@ -2,6 +2,7 @@ import scipy.spatial.distance
 from PIL import Image, ImageTk
 import numpy as np
 
+from dijkstra import Dijkstra_algorithm #new file
 
 class Pedestrian:
     """
@@ -33,26 +34,26 @@ class Pedestrian:
             if 0 <= x + self._position[0] < scenario.width and 0 <= y + self._position[1] < scenario.height and np.abs(x) + np.abs(y) > 0
         ]
 
-    def update_step(self, scenario):
+
+
+    def update_step(self, scenario: "Scenario"):
         """
-        Moves to the cell with the lowest distance while avoiding obstacles.
+        Moves to the cell by cost.
+        This does not take obstacles or other pedestrians into account.
+        Pedestrians can occupy the same cell.
+
         :param scenario: The current scenario instance.
         """
         neighbors = self.get_neighbors(scenario)
-        current_cell_distance = scenario.target_distance_grids[self._position[0]][self._position[1]]
         next_pos = self._position
+        next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0],self._position[1])
 
-        # Find the neighboring cell with the lowest distance while avoiding obstacles
         for (n_x, n_y) in neighbors:
-            neighbor_distance = scenario.target_distance_grids[n_x][n_y]
-            if neighbor_distance < current_cell_distance:
-                if scenario.grid[n_x][n_y] != Scenario.NAME2ID['OBSTACLE']:
-                    next_pos = (n_x, n_y)
-                    current_cell_distance = neighbor_distance
+            if next_cell_distance > scenario.dijkstra.estimate_cost(n_x, n_y):
+                next_pos = (n_x, n_y)
+                next_cell_distance = scenario.dijkstra.estimate_cost(n_x, n_y)
+        self._position = next_pos
 
-        # Check if the next cell is not an obstacle before updating position
-        if scenario.grid[next_pos[0]][next_pos[1]] != Scenario.NAME2ID['OBSTACLE']:
-            self._position = next_pos
 
 
 class Scenario:
@@ -90,56 +91,40 @@ class Scenario:
         self.grid_image = None
         self.grid = np.zeros((width, height))
         self.pedestrians = []
-        self.target_distance_grids = self.recompute_target_distances()
 
-    def recompute_target_distances(self):
-        self.target_distance_grids = self.update_target_grid()
-        return self.target_distance_grids
+        #there might be problem in deciding height, width in my coding, however, if grid is square it won't be problem.
+        self.dijkstra= None
 
-    def update_target_grid(self):
+
+
+    def update_cost(self):
         """
-        Computes the shortest distance from every grid point to the nearest target cell.
-        Obstacles are given a very high cost.
+        Uses dijkstra algorthim to calculate cost of the plain.
+        This does not take obstacles into account.
         :returns: The distance for every grid cell, as a np.ndarray.
         """
         targets = []
-        obstacles = []
         for x in range(self.width):
             for y in range(self.height):
-                cell_value = self.grid[x, y]
-                if cell_value == Scenario.NAME2ID['TARGET']:
+                if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
                     targets.append([y, x])  # y and x are flipped because they are in image space.
-                elif cell_value == Scenario.NAME2ID['OBSTACLE']:
-                    obstacles.append([y, x])
-
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
 
-        targets = np.row_stack(targets)
-        obstacles = np.row_stack(obstacles) if obstacles else None
+        print(targets)
 
-        x_space = np.arange(0, self.width)
-        y_space = np.arange(0, self.height)
-        xx, yy = np.meshgrid(x_space, y_space)
-        positions = np.column_stack([xx.ravel(), yy.ravel()])
+        check_for_obstacle =np.zeros((self.width,self.height))
+
+        for x in range(self.width):
+            for y in range(self.height):
+                    check_for_obstacle[y][x] = bool(self.grid[x, y] == Scenario.NAME2ID['OBSTACLE'])
 
 
-        # Calculate pair-wise distances
-        distances_to_targets = scipy.spatial.distance.cdist(targets, positions)
-        if obstacles is not None:
-            distances_to_obstacles = scipy.spatial.distance.cdist(obstacles, positions)
+        self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets, check_for_obstacle)# cost regarding to Dijkstra_algorithm
+        self.dijkstra.execute()
 
-            # Setting a high cost for obstacles
-            max_obstacle_distance = 1000
-            obstacle_costs = np.max(distances_to_obstacles, axis=0)
-            distances = np.where(obstacle_costs == 0, max_obstacle_distance, distances_to_targets)
-        else:
-            distances = distances_to_targets
 
-        # Compute the minimum distance over all distances to all targets.
-        distances = np.min(distances, axis=0)
 
-        return distances.reshape((self.width, self.height))
 
     def update_step(self):
         """
@@ -147,6 +132,7 @@ class Scenario:
         This does not take obstacles or other pedestrians into account.
         Pedestrians can occupy the same cell.
         """
+
         for pedestrian in self.pedestrians:
             pedestrian.update_step(self)
 

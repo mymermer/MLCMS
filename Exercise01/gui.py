@@ -1,8 +1,8 @@
 import sys
-import tkinter
-from tkinter import Button, Canvas, Menu, filedialog
+import tkinter as tk
+from tkinter import Button, Canvas, Menu, messagebox
 from scenario_elements import Scenario, Pedestrian
-import time
+import threading
 import json
 
 class MainGUI():
@@ -35,9 +35,6 @@ class MainGUI():
 
         self.scenario.recompute_target_distances()
         self.scenario.to_image(self.canvas, self.canvas_image)
-
-        # can be used to show the target grid instead
-        # self.scenario.target_grid_to_image(self.canvas, self.canvas_image)
 
     def restart_scenario(self):
         print('Restart not implemented yet')
