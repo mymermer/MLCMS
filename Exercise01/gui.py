@@ -73,7 +73,7 @@ class MainGUI():
         self.canvas = Canvas(self.win, width=Scenario.GRID_SIZE[0], height=Scenario.GRID_SIZE[1])
         self.canvas_image = self.canvas.create_image(5, 50, image=None, anchor=tkinter.NW)
         self.canvas.pack()
-        self.create_scenario('scenario.json')
+        self.create_scenario('Exercise01\scenario.json')
 
         btn = Button(self.win, text='Step simulation', command=lambda: self.step_scenario())
         btn.place(x=20, y=10)
