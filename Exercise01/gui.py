@@ -1,8 +1,7 @@
 import sys
-import tkinter as tk
-from tkinter import Button, Canvas, Menu, messagebox
+import tkinter
+from tkinter import Button, Canvas, Menu, filedialog
 from scenario_elements import Scenario, Pedestrian
-import threading
 import json
 
 class MainGUI():
@@ -33,8 +32,9 @@ class MainGUI():
         for obstacle in data['obstacles']:
             self.scenario.grid[obstacle[0], obstacle[1]] = Scenario.NAME2ID['OBSTACLE']
 
-        self.scenario.recompute_target_distances()
+        # self.scenario.recompute_target_distances()
         self.scenario.to_image(self.canvas, self.canvas_image)
+        self.scenario.update_cost()
 
     def restart_scenario(self):
         print('Restart not implemented yet')
@@ -56,27 +56,6 @@ class MainGUI():
         if scenario_file:
             self.create_scenario(scenario_file)
 
-    def open_simulation_popup(self):
-        popup = tkinter.Toplevel(self.win)
-        popup.title('Enter Simulation steps')
-
-        entry = tkinter.Entry(popup)
-        entry.pack()
-
-        start_button = tkinter.Button(popup, text='Start Simulation',
-                                      command=lambda: self.start_simulation(entry, popup))
-        start_button.pack()
-
-    def start_simulation(self, entry, popup):
-        input_time = entry.get()
-        try:
-            num_steps = int(input_time)
-            popup.destroy()
-            for _ in range(num_steps):
-                self.step_scenario()
-        except ValueError:
-            print("Invalid input. Please enter a valid number.")
-
     def start_gui(self):
         self.win = tkinter.Tk()
         self.win.geometry('500x500')
@@ -96,15 +75,12 @@ class MainGUI():
         self.canvas.pack()
         self.create_scenario('scenario.json')
 
-
         btn = Button(self.win, text='Step simulation', command=lambda: self.step_scenario())
         btn.place(x=20, y=10)
         btn = Button(self.win, text='Restart simulation', command=self.restart_scenario)
         btn.place(x=200, y=10)
         btn = Button(self.win, text='Create simulation', command=lambda: self.load_scenario())
         btn.place(x=380, y=10)
-        btn = Button(self.win, text='Start simulation', command=lambda: self.open_simulation_popup())
-        btn.place(x=560, y=10)
 
         self.win.mainloop()
 
