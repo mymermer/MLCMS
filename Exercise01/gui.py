@@ -11,13 +11,18 @@ class MainGUI():
         self.canvas = None
         self.canvas_image = None
         self.scenario = None
+        self.directory_of_scenario='Exercise01\dummy_test_for_dijkstra.json'
 
-    def create_scenario(self, scenario_file):
-        with open(scenario_file, 'r') as file:
+    def create_scenario(self, file_path=None):
+        if file_path== None:
+            file_path = filedialog.askopenfilename(initialdir='./Exercise01', filetypes=[("JSON Files", "*.json")])
+        
+        self.directory_of_scenario=file_path
+        
+        with open(file_path, 'r') as file:
             data = json.load(file)
 
         self.scenario = Scenario(data['width'], data['height'])
-        print(self.scenario)
 
         for target in data['targets']:
             self.scenario.grid[target[0], target[1]] = Scenario.NAME2ID['TARGET']
@@ -32,12 +37,12 @@ class MainGUI():
         for obstacle in data['obstacles']:
             self.scenario.grid[obstacle[0], obstacle[1]] = Scenario.NAME2ID['OBSTACLE']
 
-        # self.scenario.recompute_target_distances()
         self.scenario.to_image(self.canvas, self.canvas_image)
         self.scenario.update_cost()
 
     def restart_scenario(self):
-        print('Restart not implemented yet')
+        self.create_scenario(self.directory_of_scenario)
+
 
     def step_scenario(self):
         if self.scenario:
@@ -73,7 +78,7 @@ class MainGUI():
         self.canvas = Canvas(self.win, width=Scenario.GRID_SIZE[0], height=Scenario.GRID_SIZE[1])
         self.canvas_image = self.canvas.create_image(5, 50, image=None, anchor=tkinter.NW)
         self.canvas.pack()
-        self.create_scenario('Exercise01\dummy_test_for_dijkstra.json')
+        self.create_scenario(self.directory_of_scenario)
 
         btn = Button(self.win, text='Step simulation', command=lambda: self.step_scenario())
         btn.place(x=20, y=10)

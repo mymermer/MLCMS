@@ -46,7 +46,15 @@ class Pedestrian:
         """
         neighbors = self.get_neighbors(scenario)
         next_pos = self._position
-        print(scenario)
+
+
+        # input("""Which algortihm?:
+        #       a-Rudimentary obstacle avoidance using Euclidean distance
+        #       b-Dijkstra Algorithm with Priority Queue
+        #       """)
+        
+
+
         next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0], self._position[1])
 
         for (n_x, n_y) in neighbors:
@@ -112,7 +120,6 @@ class Scenario:
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
 
-        print(targets)
 
         check_for_obstacle = np.zeros((self.width, self.height))
 
