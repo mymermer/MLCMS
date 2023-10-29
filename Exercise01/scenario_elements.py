@@ -190,7 +190,7 @@ class Scenario:
 
     def euclidean_update_target_grid(self):
         """
-        Uses dijkstra algorthim to calculate cost of the plain.
+        Computes the shortest distance from every grid point to the nearest target cell.
         This does not take obstacles into account.
         :returns: The distance for every grid cell, as a np.ndarray.
         """
@@ -202,51 +202,19 @@ class Scenario:
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
 
-        print(targets)
+        targets = np.row_stack(targets)
+        x_space = np.arange(0, self.width)
+        y_space = np.arange(0, self.height)
+        xx, yy = np.meshgrid(x_space, y_space)
+        positions = np.column_stack([xx.ravel(), yy.ravel()])
 
-        check_for_obstacle = np.zeros((self.width, self.height))
+        # after the target positions and all grid cell positions are stored,
+        # compute the pair-wise distances in one step with scipy.
+        distances = scipy.spatial.distance.cdist(targets, positions)
 
-        for x in range(self.width):
-            for y in range(self.height):
-                check_for_obstacle[y][x] = bool(self.grid[x, y] == Scenario.NAME2ID['OBSTACLE'])
+        # now, compute the minimum over all distances to all targets.
+        distances = np.min(distances, axis=0)
 
-        self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets,
-                                           check_for_obstacle)  # cost regarding to Dijkstra_algorithm
-        self.dijkstra.execute()
-
-    # def recompute_target_distances(self):
-    #     self.target_distance_grids = self.update_target_grid()
-    #     return self.target_distance_grids
-
-
-
-    # def update_target_grid(self):
-    #     """
-    #     Computes the shortest distance from every grid point to the nearest target cell.
-    #     This does not take obstacles into account.
-    #     :returns: The distance for every grid cell, as a np.ndarray.
-    #     """
-    #     targets = []
-    #     for x in range(self.width):
-    #         for y in range(self.height):
-    #             if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
-    #                 targets.append([y, x])  # y and x are flipped because they are in image space.
-    #     if len(targets) == 0:
-    #         return np.zeros((self.width, self.height))
-    #
-    #     targets = np.row_stack(targets)
-    #     x_space = np.arange(0, self.width)
-    #     y_space = np.arange(0, self.height)
-    #     xx, yy = np.meshgrid(x_space, y_space)
-    #     positions = np.column_stack([xx.ravel(), yy.ravel()])
-    #
-    #     # after the target positions and all grid cell positions are stored,
-    #     # compute the pair-wise distances in one step with scipy.
-    #     distances = scipy.spatial.distance.cdist(targets, positions)
-    #
-    #     # now, compute the minimum over all distances to all targets.
-    #     distances = np.min(distances, axis=0)
-    #
-    #     return distances.reshape((self.width, self.height))
+        return distances.reshape((self.width, self.height))
 
     

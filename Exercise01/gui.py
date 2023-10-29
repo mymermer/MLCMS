@@ -113,4 +113,3 @@ class MainGUI():
         btn.place(x=380, y=40)
 
         self.win.mainloop()
-
