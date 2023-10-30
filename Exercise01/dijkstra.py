@@ -11,12 +11,10 @@ class Dijkstra_algorithm:
     def __init__(self, height, width, target_locations, check_for_obstacle):
 
         """
-    
     :param height: The height of the grid.
     :param width: The width of the grid.
     :param target_locations: the list of target locations.
     :param check_for_obstacle: the boolean matrix indicating which locations are occupied by obstacles.
-
         """
         
         self.cost_matrix = np.full((height, width),
