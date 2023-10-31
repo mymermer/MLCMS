@@ -48,7 +48,7 @@ class Pedestrian:
 
         return neighbours_list
 
-    def update_euclidean_move(self, neighbours, scenario, next_cell_distance):
+    def update_euclidean_move(self, neighbours, scenario):
         """
         updates the move of the pedestrians when Euclidean distance is selected.
         """
@@ -117,7 +117,7 @@ class Pedestrian:
             next_cell_distance = scenario.euclidean_update_target_grid()[self._position[0]][self._position[1]]
             if not self.waiting:
                 self.waiting = True
-                next_pos = self.update_euclidean_move(neighbors, scenario, next_cell_distance)
+                next_pos = self.update_euclidean_move(neighbors, scenario)
                 # if diagonal increase waiting time to simulate real-life scenario as diagonal moves are longer
                 self.waiting_time = math.sqrt(2) / self._desired_speed if self.check_diagonal(next_pos) else 1 / self._desired_speed
                 self._position = next_pos

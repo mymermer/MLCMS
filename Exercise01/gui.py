@@ -14,14 +14,14 @@ class MainGUI():
         self.canvas = None
         self.canvas_image = None
         self.scenario = None
-        self.directory_of_scenario = 'Exercise01/dummy_test_for_dijkstra.json' # 'dummy_test_for_dijkstra.json'
+        self.directory_of_scenario = 'Exercise01/scenarios/dummy_test_for_dijkstra.json' # 'dummy_test_for_dijkstra.json'
         self.algorithm_choice = None
         self.restart_clicked=bool()
 
     def load_scenario(self, file_path: str = ""):
         self.restart_clicked=False
         if file_path == "":
-            file_path = filedialog.askopenfilename(initialdir='./Exercise01', filetypes=[("JSON Files", "*.json")])
+            file_path = filedialog.askopenfilename(initialdir='./Exercise01/scenarios', filetypes=[("JSON Files", "*.json")])
 
         self.directory_of_scenario = file_path
 
