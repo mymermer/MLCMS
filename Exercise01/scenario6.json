@@ -1,0 +1,17 @@
+{
+    "width": 10,
+    "height": 10,
+    "pedestrians": [
+        {"position": [0,3], "desiredSpeed": 1},
+        {"position": [0,4], "desiredSpeed": 2}
+    
+    ],
+    "targets": [
+        [9,3],
+        [9,4]
+    
+    ],
+    "obstacles": [
+
+    ]
+  }
