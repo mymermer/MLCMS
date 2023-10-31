@@ -95,21 +95,18 @@ class Pedestrian:
             next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0], self._position[1])
             if not self.waiting:
                 self.waiting = True
+                next_pos = self.update_djikstra_move(neighbors, scenario, next_cell_distance)
+                self._position = next_pos
                 self.waiting_time = math.sqrt(2) / self._desired_speed if self.check_diagonal(
                     next_pos) else 1 / self._desired_speed
-                next_pos = self.update_djikstra_move(neighbors, scenario, next_cell_distance)
-                self.total_time += 0.3
             else:
-                self.waiting_time -= 0.3
-                self.total_time += 0.3
+                self.waiting_time -= 0.1
+                self.total_time += 0.1
                 if round(self.waiting_time, 2) <= 0:
                     self.waiting = False
-                    next_pos = self.update_djikstra_move(neighbors, scenario, next_cell_distance)
-            self._position = next_pos
 
         else:
             neighbors = self.get_neighbors(scenario)
-            next_pos = self._position
             next_cell_distance = scenario.euclidean_update_target_grid()[self._position[0]][self._position[1]]
             if not self.waiting:
                 self.waiting = True
@@ -117,16 +114,12 @@ class Pedestrian:
                 # if diagonal increase waiting time to simulate real-life scenario as diagonal moves are longer
                 self.waiting_time = math.sqrt(2) / self._desired_speed if self.check_diagonal(next_pos) else 1 / self._desired_speed
                 self._position = next_pos
-                self.total_time += 0.3
+                self.distance_covered +=self.waiting_time*self._desired_speed
             else:
-                self.waiting_time -= 0.3
-                self.total_time += 0.3
+                self.waiting_time -= 0.1
+                self.total_time += 0.1
                 if round(self.waiting_time, 2) <= 0:
                     self.waiting = False
-                    self._position = self.update_euclidean_move(neighbors, scenario, next_cell_distance)
-
-            if scenario.grid[next_pos[0], next_pos[1]] == Scenario.NAME2ID['TARGET']:
-                print("Pedestrian reached in time: {}", round(self.total_time, 3))
 
     def reset_step(self):
         self._position = self._starting_position
@@ -205,6 +198,8 @@ class Scenario:
             pedestrian.update_step(self, algorithm_choice)
             # removing the pedestrians if it reaches the target
             if self.grid[pedestrian._position[0], pedestrian._position[1]] == Scenario.NAME2ID['TARGET']:
+                print("Pedestrian reached at {} in time: {}".format(pedestrian._starting_position, round(pedestrian.total_time, 3)))
+                print("Total distance: {}".format(pedestrian.distance_covered))
                 self.pedestrians.remove(pedestrian)
 
     @staticmethod

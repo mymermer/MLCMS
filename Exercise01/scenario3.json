@@ -1,15 +1,15 @@
 {
-  "width": 100,
-  "height": 100,
+  "width": 80,
+  "height": 80,
   "pedestrians":[
-    {"position": [50, 20], "desiredSpeed": 1},
-    {"position": [20, 50], "desiredSpeed": 1},
-    {"position": [35, 75], "desiredSpeed": 1},
-    {"position": [65, 75], "desiredSpeed": 1},
-    {"position": [80, 50], "desiredSpeed": 1}
+    {"position": [15, 22], "desiredSpeed": 1},
+    {"position": [34, 9], "desiredSpeed": 1},
+    {"position": [68, 28], "desiredSpeed": 1},
+    {"position": [59, 64], "desiredSpeed": 1},
+    {"position": [14, 55], "desiredSpeed": 1}
 ],
   "targets": [
-    [50,50]
+    [40,40]
   ],
   "obstacles": [
   ]
