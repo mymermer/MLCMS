@@ -34,19 +34,37 @@ class Pedestrian:
         :param scenario: The scenario instance.
         :return: A list of neighbor cell indices (x,y) around the current position.
         """
-        return [
-            (int(x + self._position[0]), int(y + self._position[1]))
-            for x in [-1, 0, 1]
-            for y in [-1, 0, 1]
-            if 0 <= x + self._position[0] < scenario.width and 0 <= y + self._position[1] < scenario.height and np.abs(
-                x) + np.abs(y) > 0
-        ]
+        def condition(x,y):
+            return 0 <= x + self._position[0] < scenario.width and 0 <= y + self._position[1] < scenario.height and np.abs(
+                x) + np.abs(y) > 0 
+
+        neighbors_list=[]
+
+        if condition(0,1):
+            neighbors_list.append((0 + self._position[0] , 1 + self._position[1] ))
+        if condition(0,-1):
+            neighbors_list.append((0 + self._position[0] , -1 + self._position[1]))
+        if condition(1,0):
+            neighbors_list.append((1 + self._position[0] , 0 + self._position[1] ))
+        if condition(-1,0):
+            neighbors_list.append((-1 + self._position[0], 0 + self._position[1] ))
+        if condition(1,1):
+            neighbors_list.append((1 + self._position[0] , 1 + self._position[1] ))
+        if condition(-1,-1):
+            neighbors_list.append((-1 + self._position[0], -1 + self._position[1]))
+        if condition(1,-1):
+            neighbors_list.append((1 + self._position[0] , -1 + self._position[1]))
+        if condition(-1,1):
+            neighbors_list.append((-1 + self._position[0], 1 + self._position[1] ))
+
+        return neighbors_list
 
     def update_euclidean_move(self, neighbours, scenario, next_cell_distance):
         """
         updates the move of the pedestrians when Euclidean distance is selected.
         """
         next_pos = self._position
+        next_cell_distance= np.inf
         for (n_x, n_y) in neighbours:
             is_next_position_occupied = any(
                 pedestrian.position == (n_x, n_y) for pedestrian in scenario.pedestrians)
@@ -248,7 +266,6 @@ class Scenario:
     def euclidean_update_target_grid(self):
         """
         Uses dijkstra algorthim to calculate cost of the plain.
-        This does not take obstacles into account.
         :returns: The distance for every grid cell, as a np.ndarray.
         """
         targets = []
@@ -268,11 +285,6 @@ class Scenario:
         # after the target positions and all grid cell positions are stored,
         # compute the pair-wise distances in one step with scipy.
         distances = scipy.spatial.distance.cdist(targets, positions)
-
-        for x in range(self.width):
-            for y in range(self.height):
-                if self.grid[x, y] == Scenario.NAME2ID['OBSTACLE']:
-                    distances[:, y * self.width + x] = math.inf
 
         # Compute the minimum over all distances to all targets.
         distances = np.min(distances, axis=0)
