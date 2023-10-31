@@ -3,6 +3,10 @@ import math
 from queue import PriorityQueue
 
 
+#used for visiulization of cost matrices
+# import matplotlib.pyplot as plt
+
+
 
 class Dijkstra_algorithm:
 
@@ -44,6 +48,9 @@ class Dijkstra_algorithm:
 
         # Costs are updated for all neighbors of cells in the queue. 
         # Diagonal and straight-line movements are handled separately.
+        
+        
+        #iter=0 # explained below 20 25 lines
         while not queue.empty():
             cost, (x, y) = queue.get()
             for i in [-1, 0, 1]:  # will be used for x
@@ -62,6 +69,31 @@ class Dijkstra_algorithm:
                             if self.cost_matrix[x + i][y + j] > 1 + cost:
                                 self.cost_matrix[x + i][y + j] = 1 + cost
                                 queue.put((1 + cost, (x + i, y + j)))
+                    
+            #to visulize expension of cost matrix, you can chanage iter in here                    
+            # if iter==0:
+            #     temporal_cost_matrix=self.cost_matrix.copy()
+
+            # iter=iter+1
+
+
+        #to copy a matrix use .copy()
+        #vuslizing cost matrix
+        #start:
+        # plt.imshow(temporal_cost_matrix, cmap='coolwarm_r', interpolation='nearest')
+        # plt.colorbar(label='Cost')
+
+        # # Annotate the values
+        # interval = 10 #avoid too much numbers at screen
+        # for i in range(temporal_cost_matrix.shape[0]):
+        #     for j in range(temporal_cost_matrix.shape[1]):
+        #         if i % interval == 0 and j % interval == 0:
+        #             plt.text(j, i, f'{temporal_cost_matrix[i, j]:.2f}', ha='center', va='center', color='black')
+
+
+        # plt.title('Cost Matrix Visualization')
+        # plt.show()
+        #:end
 
         self.cost_matrix = self.cost_matrix.T #The cost matrix is transposed to adapt it to the grid representation.
 
