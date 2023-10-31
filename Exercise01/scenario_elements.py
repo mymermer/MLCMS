@@ -28,7 +28,7 @@ class Pedestrian:
     def desired_speed(self):
         return self._desired_speed
 
-    def get_neighbors(self, scenario):
+    def get_neighbours(self, scenario):
         """
         Compute all neighbors in a 9 cell neighborhood of the current position.
         :param scenario: The scenario instance.
@@ -38,26 +38,15 @@ class Pedestrian:
             return 0 <= x + self._position[0] < scenario.width and 0 <= y + self._position[1] < scenario.height and np.abs(
                 x) + np.abs(y) > 0 
 
-        neighbors_list=[]
+        neighbours_list=[]
 
-        if condition(0,1):
-            neighbors_list.append((0 + self._position[0] , 1 + self._position[1] ))
-        if condition(0,-1):
-            neighbors_list.append((0 + self._position[0] , -1 + self._position[1]))
-        if condition(1,0):
-            neighbors_list.append((1 + self._position[0] , 0 + self._position[1] ))
-        if condition(-1,0):
-            neighbors_list.append((-1 + self._position[0], 0 + self._position[1] ))
-        if condition(1,1):
-            neighbors_list.append((1 + self._position[0] , 1 + self._position[1] ))
-        if condition(-1,-1):
-            neighbors_list.append((-1 + self._position[0], -1 + self._position[1]))
-        if condition(1,-1):
-            neighbors_list.append((1 + self._position[0] , -1 + self._position[1]))
-        if condition(-1,1):
-            neighbors_list.append((-1 + self._position[0], 1 + self._position[1] ))
+        environment=[(0,1),(0,-1),(1,0),(-1,0),(1,1),(-1,-1),(1,-1),(-1,1)]
 
-        return neighbors_list
+
+        for x,y in environment:
+            if condition(x,y): neighbours_list.append((x + self._position[0] , y + self._position[1] ))
+
+        return neighbours_list
 
     def update_euclidean_move(self, neighbours, scenario, next_cell_distance):
         """
@@ -107,7 +96,7 @@ class Pedestrian:
 
         :param scenario: The current scenario instance.
         """
-        neighbors = self.get_neighbors(scenario)
+        neighbors = self.get_neighbours(scenario)
         next_pos = self._position
         if algorithm_choice == "Dijkstra Algorithm":
             next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0], self._position[1])
@@ -124,7 +113,7 @@ class Pedestrian:
                     self.waiting = False
 
         else:
-            neighbors = self.get_neighbors(scenario)
+            neighbors = self.get_neighbours(scenario)
             next_cell_distance = scenario.euclidean_update_target_grid()[self._position[0]][self._position[1]]
             if not self.waiting:
                 self.waiting = True

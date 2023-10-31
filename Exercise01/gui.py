@@ -16,8 +16,10 @@ class MainGUI():
         self.scenario = None
         self.directory_of_scenario = 'Exercise01/dummy_test_for_dijkstra.json' # 'dummy_test_for_dijkstra.json'
         self.algorithm_choice = None
+        self.restart_clicked=bool()
 
     def load_scenario(self, file_path: str = ""):
+        self.restart_clicked=False
         if file_path == "":
             file_path = filedialog.askopenfilename(initialdir='./Exercise01', filetypes=[("JSON Files", "*.json")])
 
@@ -88,10 +90,12 @@ class MainGUI():
             print('No scenario loaded. Load a scenario before stepping.')
 
     def run_simulation(self):
-        while self.scenario.pedestrians:
+        self.restart_clicked=True
+        while self.scenario.pedestrians and self.restart_clicked:
             self.step_scenario()
             self.win.update()  # Update the GUI to reflect the changes
             time.sleep(0.05)  # Adjust the sleep time as needed
+            
 
     def exit_gui(self):
         sys.exit()
@@ -126,13 +130,13 @@ class MainGUI():
         self.algorithm_choice.set("Dijkstra Algorithm")
 
         btn = Button(self.win, text='Step simulation',
-                     command=lambda: (self.step_scenario(), rb1.config(state="disabled"), rb2.config(state="disabled")))
+                     command=lambda: (rb1.config(state="disabled"), rb2.config(state="disabled"), self.step_scenario()))
         btn.place(x=20, y=40)
         btn = Button(self.win, text='Restart simulation',
-                     command=lambda: (self.restart_scenario(), rb1.config(state="normal"), rb2.config(state="normal")))
+                     command=lambda: (rb1.config(state="normal"), rb2.config(state="normal"), self.restart_scenario()))
         btn.place(x=200, y=40)
         btn = Button(self.win, text='Run simulation',
-                     command=lambda: (self.run_simulation(), rb1.config(state="normal"), rb2.config(state="normal")))
+                     command=lambda: (rb1.config(state="disabled"), rb2.config(state="disabled"), self.run_simulation()))
         btn.place(x=380, y=40)
         btn = Button(self.win, text='Create simulation', command=lambda: self.popupwin())
         btn.place(x=20, y=70)
