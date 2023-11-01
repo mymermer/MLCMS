@@ -6,7 +6,6 @@ import json
 import time
 import os
 
-
 class MainGUI():
 
     def __init__(self):
@@ -31,7 +30,7 @@ class MainGUI():
         self.scenario = Scenario(data['width'], data['height'])
 
         for target in data['targets']:
-            self.scenario.grid[target[1], target[0]] = Scenario.NAME2ID['TARGET']
+            self.scenario.grid[target[0], target[1]] = Scenario.NAME2ID['TARGET']
 
         self.scenario.pedestrians = []
 
@@ -41,7 +40,7 @@ class MainGUI():
             self.scenario.pedestrians.append(Pedestrian(position, desired_speed))
 
         for obstacle in data['obstacles']:
-            self.scenario.grid[obstacle[1], obstacle[0]] = Scenario.NAME2ID['OBSTACLE']
+            self.scenario.grid[obstacle[0], obstacle[1]] = Scenario.NAME2ID['OBSTACLE']
 
         self.scenario.to_image(self.canvas, self.canvas_image)
 

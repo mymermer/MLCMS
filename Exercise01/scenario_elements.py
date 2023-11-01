@@ -130,7 +130,7 @@ class Pedestrian:
 
     def reset_step(self):
         self._position = self._starting_position
-
+    
     def checkoloc(self,scenario: "Scenario"):
         if (225,18)==(self._position[0],self._position[1]):
             scenario.speeds225_18.append(self.desired_speed)
@@ -138,7 +138,6 @@ class Pedestrian:
             scenario.speeds250_17.append(self.desired_speed)
         elif (250,18)==(self._position[0],self._position[1]):
             scenario.speeds250_18.append(self.desired_speed)
-
 
 class Scenario:
     """
@@ -173,7 +172,7 @@ class Scenario:
         self.width = width
         self.height = height
         self.grid_image = None
-        self.grid = np.zeros((height, width))
+        self.grid = np.zeros((width, height))
         self.pedestrians = []
         self.speeds = []
 
@@ -191,18 +190,18 @@ class Scenario:
         :returns: The distance for every grid cell, as a np.ndarray.
         """
         targets = []
-        for x in range(self.height):
-            for y in range(self.width):
+        for x in range(self.width):
+            for y in range(self.height):
                 if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
                     targets.append([y, x])  # y and x are flipped because they are in image space.
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
 
-        check_for_obstacle = np.zeros((self.height, self.width))
+        check_for_obstacle = np.zeros((self.width, self.height))
 
-        for x in range(self.height):
-            for y in range(self.width):
-                check_for_obstacle[x][y] = bool(self.grid[x, y] == Scenario.NAME2ID['OBSTACLE'])
+        for x in range(self.width):
+            for y in range(self.height):
+                check_for_obstacle[y][x] = bool(self.grid[x, y] == Scenario.NAME2ID['OBSTACLE'])
 
         self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets,
                                            check_for_obstacle)  # cost regarding to Dijkstra_algorithm
@@ -217,20 +216,18 @@ class Scenario:
         for pedestrian in self.pedestrians:
             pedestrian.update_step(self, algorithm_choice)
             # removing the pedestrians if it reaches the target
-
-            if self.grid[pedestrian._position[1], pedestrian._position[0]] == Scenario.NAME2ID['TARGET']:
+            if self.grid[pedestrian._position[0], pedestrian._position[1]] == Scenario.NAME2ID['TARGET']:
                 # Since target is absorbing,we need to add one more step as the final step is not considered while adding time
                 pedestrian.total_time += 1/pedestrian._desired_speed
                 self.speeds.append({"Totaltime":pedestrian.total_time, "DesiredSpeed":pedestrian._desired_speed, "Starting_Position":pedestrian._starting_position,"Total_distance":pedestrian.distance_covered, "ActualSpeed":round(pedestrian.distance_covered/pedestrian.total_time, 3)})
                 print("Pedestrian at {} reached in time: {}".format(pedestrian._starting_position,round(pedestrian.total_time, 2)))
-
                 print("Total distance: {}".format(pedestrian.distance_covered))
                 print("Speed of pedestrian: {} m/s".format(round(pedestrian.distance_covered/pedestrian.total_time, 2)))
                 self.pedestrians.remove(pedestrian)
 
         #saving the speed statistics to a json file
-        if len(self.pedestrians) is 0:
-            with open('statistics.json', 'w') as file:
+        if len(self.pedestrians) == 0:
+            with open('./Exercise01/statistics.json', 'w') as file:
                 json.dump(self.speeds, file, indent=2)
 
     @staticmethod
@@ -247,9 +244,9 @@ class Scenario:
 
         im = Image.new(mode="RGB", size=(self.width, self.height))
         pix = im.load()
-        for x in range(self.height):
-            for y in range(self.width):
-                pix[y, x] = self.cell_to_color(self.grid[x, y])
+        for x in range(self.width):
+            for y in range(self.height):
+                pix[x, y] = self.cell_to_color(self.grid[x, y])
         for pedestrian in self.pedestrians:
             x, y = pedestrian.position
             pix[x, y] = Scenario.NAME2COLOR['PEDESTRIAN']
@@ -263,8 +260,8 @@ class Scenario:
         :returns: The distance for every grid cell, as a np.ndarray.
         """
         targets = []
-        for x in range(self.height):
-            for y in range(self.width):
+        for x in range(self.width):
+            for y in range(self.height):
                 if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
                     targets.append([y, x])  # y and x are flipped because they are in image space.
         if len(targets) == 0:
@@ -285,10 +282,11 @@ class Scenario:
         distances = distances.reshape((self.width, self.height))
 
         return distances
+    
 
 
     def control_points(self): 
-        
+
         self.speeds225_18=[]
         self.speeds250_17=[]
         self.speeds250_18=[]
@@ -310,4 +308,3 @@ class Scenario:
             if len(self.total_speeds225_18)!=0:print("avarage speed in point (225,3): ",sum(self.total_speeds225_18) / len(self.speeds225_18)) 
             if len(self.total_speeds250_17)!=0:print("avarage speed in point (250,2):",sum(self.total_speeds250_17) / len(self.speeds250_17))
             if len(self.total_speeds250_18)!=0:print("avarage speed in point (250,3): ",sum(self.total_speeds250_18) / len(self.speeds250_18))
-        

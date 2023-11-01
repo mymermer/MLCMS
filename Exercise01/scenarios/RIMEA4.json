@@ -1,6 +1,6 @@
 {
     "width": 275,
-    "height": 40,
+    "height": 275,
     "pedestrians": [ 
         { "position": [248, 17], "desiredSpeed": 1.2},
         { "position": [248, 17], "desiredSpeed": 1.3},
