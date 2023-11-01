@@ -5,6 +5,7 @@ from scenario_elements import Scenario, Pedestrian
 import json
 import time
 import numpy as np
+import os
 
 
 class MainGUI():
@@ -94,6 +95,8 @@ class MainGUI():
         while self.scenario.pedestrians and self.restart_clicked:
             self.step_scenario()
             self.win.update()  # Update the GUI to reflect the changes
+            if os.path.abspath(self.directory_of_scenario)== os.path.abspath('./Exercise01/scenarios/RIMEA4.json'):
+                self.scenario.control_points()
             time.sleep(0.05)  # Adjust the sleep time as needed
             
 

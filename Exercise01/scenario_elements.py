@@ -131,6 +131,14 @@ class Pedestrian:
     def reset_step(self):
         self._position = self._starting_position
 
+    def checkoloc(self,scenario: "Scenario"):
+        if (225,18)==(self._position[0],self._position[1]):
+            scenario.speeds225_18.append(self.desired_speed)
+        elif (250,17)==(self._position[0],self._position[1]):
+            scenario.speeds250_17.append(self.desired_speed)
+        elif (250,18)==(self._position[0],self._position[1]):
+            scenario.speeds250_18.append(self.desired_speed)
+
 
 class Scenario:
     """
@@ -171,6 +179,10 @@ class Scenario:
         # there might be problem in deciding height, width in my coding, however, if grid is square it won't be problem.
         self.dijkstra = None
 
+        self.total_speeds225_18=[]
+        self.total_speeds250_17=[]
+        self.total_speeds250_18=[]
+
     def update_cost(self):
         """
         Uses dijkstra algorthim to calculate cost of the plain.
@@ -204,7 +216,7 @@ class Scenario:
         for pedestrian in self.pedestrians:
             pedestrian.update_step(self, algorithm_choice)
             # removing the pedestrians if it reaches the target
-            if self.grid[pedestrian._position[0], pedestrian._position[1]] == Scenario.NAME2ID['TARGET']:
+            if self.grid[pedestrian._position[1], pedestrian._position[0]] == Scenario.NAME2ID['TARGET']:
                 print("Pedestrian reached at {} in time: {}".format(pedestrian._starting_position, round(pedestrian.total_time, 3)))
                 print("Total distance: {}".format(pedestrian.distance_covered))
                 self.pedestrians.remove(pedestrian)
@@ -280,3 +292,29 @@ class Scenario:
         distances = distances.reshape((self.width, self.height))
 
         return distances
+
+
+    def control_points(self): 
+        
+        self.speeds225_18=[]
+        self.speeds250_17=[]
+        self.speeds250_18=[]
+
+
+
+
+
+        for pedestrian in self.pedestrians:
+            pedestrian.checkoloc(self)
+
+
+        if len(self.speeds225_18)!=0: self.total_speeds225_18.append(sum(self.speeds225_18) / len(self.speeds225_18))
+        if len(self.speeds250_17)!=0:self.total_speeds250_17.append(sum(self.speeds250_17) / len(self.speeds250_17))
+        if len(self.speeds250_18)!=0:self.total_speeds250_18.append(sum(self.speeds250_18) / len(self.speeds250_18))
+
+
+        if len(self.total_speeds250_18)==60:
+            if len(self.total_speeds225_18)!=0:print("avarage speed in point (225,3): ",sum(self.total_speeds225_18) / len(self.speeds225_18)) 
+            if len(self.total_speeds250_17)!=0:print("avarage speed in point (250,2):",sum(self.total_speeds250_17) / len(self.speeds250_17))
+            if len(self.total_speeds250_18)!=0:print("avarage speed in point (250,3): ",sum(self.total_speeds250_18) / len(self.speeds250_18))
+        
