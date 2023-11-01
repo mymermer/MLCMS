@@ -4,7 +4,6 @@ from tkinter import Button, Canvas, Menu, filedialog, Radiobutton, messagebox
 from scenario_elements import Scenario, Pedestrian
 import json
 import time
-import numpy as np
 
 
 class MainGUI():
@@ -114,8 +113,8 @@ class MainGUI():
         file_menu.add_command(label='Close', command=self.exit_gui)
 
         self.canvas = Canvas(self.win, width=Scenario.GRID_SIZE[0], height=Scenario.GRID_SIZE[1])
-        self.canvas_image = self.canvas.create_image(5, 120, image=None, anchor=tkinter.NW)
-        self.canvas.pack()
+        self.canvas_image = self.canvas.create_image(40, 120, image=None, anchor=tkinter.NW)
+        self.canvas.pack(expand=1, fill=tkinter.BOTH)
         self.load_scenario(self.directory_of_scenario)
 
         self.algorithm_choice = tkinter.StringVar()
