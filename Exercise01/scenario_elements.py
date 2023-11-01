@@ -165,7 +165,7 @@ class Scenario:
         self.width = width
         self.height = height
         self.grid_image = None
-        self.grid = np.zeros((width, height))
+        self.grid = np.zeros((height, width))
         self.pedestrians = []
 
         # there might be problem in deciding height, width in my coding, however, if grid is square it won't be problem.
@@ -178,18 +178,18 @@ class Scenario:
         :returns: The distance for every grid cell, as a np.ndarray.
         """
         targets = []
-        for x in range(self.width):
-            for y in range(self.height):
+        for x in range(self.height):
+            for y in range(self.width):
                 if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
                     targets.append([y, x])  # y and x are flipped because they are in image space.
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
 
-        check_for_obstacle = np.zeros((self.width, self.height))
+        check_for_obstacle = np.zeros((self.height, self.width))
 
-        for x in range(self.width):
-            for y in range(self.height):
-                check_for_obstacle[y][x] = bool(self.grid[x, y] == Scenario.NAME2ID['OBSTACLE'])
+        for x in range(self.height):
+            for y in range(self.width):
+                check_for_obstacle[x][y] = bool(self.grid[x, y] == Scenario.NAME2ID['OBSTACLE'])
 
         self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets,
                                            check_for_obstacle)  # cost regarding to Dijkstra_algorithm
@@ -242,9 +242,9 @@ class Scenario:
 
         im = Image.new(mode="RGB", size=(self.width, self.height))
         pix = im.load()
-        for x in range(self.width):
-            for y in range(self.height):
-                pix[x, y] = self.cell_to_color(self.grid[x, y])
+        for x in range(self.height):
+            for y in range(self.width):
+                pix[y, x] = self.cell_to_color(self.grid[x, y])
         for pedestrian in self.pedestrians:
             x, y = pedestrian.position
             pix[x, y] = Scenario.NAME2COLOR['PEDESTRIAN']
@@ -258,8 +258,8 @@ class Scenario:
         :returns: The distance for every grid cell, as a np.ndarray.
         """
         targets = []
-        for x in range(self.width):
-            for y in range(self.height):
+        for x in range(self.height):
+            for y in range(self.width):
                 if self.grid[x, y] == Scenario.NAME2ID['TARGET']:
                     targets.append([y, x])  # y and x are flipped because they are in image space.
         if len(targets) == 0:
