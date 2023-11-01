@@ -2,7 +2,7 @@ import scipy.spatial.distance
 from PIL import Image, ImageTk
 import numpy as np
 import math
-
+import json
 from dijkstra import Dijkstra_algorithm  # new file
 
 
@@ -175,6 +175,7 @@ class Scenario:
         self.grid_image = None
         self.grid = np.zeros((height, width))
         self.pedestrians = []
+        self.speeds = []
 
         # there might be problem in deciding height, width in my coding, however, if grid is square it won't be problem.
         self.dijkstra = None
@@ -216,33 +217,25 @@ class Scenario:
         for pedestrian in self.pedestrians:
             pedestrian.update_step(self, algorithm_choice)
             # removing the pedestrians if it reaches the target
+
             if self.grid[pedestrian._position[1], pedestrian._position[0]] == Scenario.NAME2ID['TARGET']:
-                print("Pedestrian reached at {} in time: {}".format(pedestrian._starting_position, round(pedestrian.total_time, 3)))
+                # Since target is absorbing,we need to add one more step as the final step is not considered while adding time
+                pedestrian.total_time += 1/pedestrian._desired_speed
+                self.speeds.append({"Totaltime":pedestrian.total_time, "DesiredSpeed":pedestrian._desired_speed, "Starting_Position":pedestrian._starting_position,"Total_distance":pedestrian.distance_covered, "ActualSpeed":round(pedestrian.distance_covered/pedestrian.total_time, 3)})
+                print("Pedestrian at {} reached in time: {}".format(pedestrian._starting_position,round(pedestrian.total_time, 2)))
+
                 print("Total distance: {}".format(pedestrian.distance_covered))
+                print("Speed of pedestrian: {} m/s".format(round(pedestrian.distance_covered/pedestrian.total_time, 2)))
                 self.pedestrians.remove(pedestrian)
+
+        #saving the speed statistics to a json file
+        if len(self.pedestrians) is 0:
+            with open('statistics.json', 'w') as file:
+                json.dump(self.speeds, file, indent=2)
 
     @staticmethod
     def cell_to_color(_id):
         return Scenario.NAME2COLOR[Scenario.ID2NAME[_id]]
-
-    # def target_grid_to_image(self, canvas, old_image_id):
-    #     """
-    #     Creates a colored image based on the distance to the target stored in
-    #     self.target_distance_gids.
-    #     :param canvas: the canvas that holds the image.
-    #     :param old_image_id: the id of the old grid image.
-    #     """
-    #     im = Image.new(mode="RGB", size=(self.width, self.height))
-    #     pix = im.load()
-    #     for x in range(self.width):
-    #         for y in range(self.height):
-    #             target_distance = self.target_distance_grids[x][y]
-    #             pix[x, y] = (max(0, min(255, int(10 * target_distance) - 0 * 255)),
-    #                          max(0, min(255, int(10 * target_distance) - 1 * 255)),
-    #                          max(0, min(255, int(10 * target_distance) - 2 * 255)))
-    #     im = im.resize(Scenario.GRID_SIZE, Image.NONE)
-    #     self.grid_image = ImageTk.PhotoImage(im)
-    #     canvas.itemconfigure(old_image_id, image=self.grid_image)
 
     def to_image(self, canvas, old_image_id):
         """
