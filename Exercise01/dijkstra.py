@@ -42,7 +42,7 @@ class Dijkstra_algorithm:
 
         # A value of 0 is assigned to each target on the grid in the cost matrix.
         for target in self.target_locations:
-            x, y = target[0], target[1]
+            x, y = target[1], target[0]
             self.cost_matrix[x][y] = 0
             queue.put((0, (x, y)))
 
