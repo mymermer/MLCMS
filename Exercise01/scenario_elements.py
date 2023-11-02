@@ -305,6 +305,6 @@ class Scenario:
 
 
         if len(self.total_speeds250_18)==60:
-            if len(self.total_speeds225_18)!=0:print("avarage speed in point (225,3): ",sum(self.total_speeds225_18) / len(self.speeds225_18)) 
-            if len(self.total_speeds250_17)!=0:print("avarage speed in point (250,2):",sum(self.total_speeds250_17) / len(self.speeds250_17))
-            if len(self.total_speeds250_18)!=0:print("avarage speed in point (250,3): ",sum(self.total_speeds250_18) / len(self.speeds250_18))
+            if len(self.total_speeds225_18)!=0:print("avarage speed in point (225,3): ",sum(self.total_speeds225_18) / len(self.total_speeds225_18)) 
+            if len(self.total_speeds250_17)!=0:print("avarage speed in point (250,2):",sum(self.total_speeds250_17) / len(self.total_speeds250_17))
+            if len(self.total_speeds250_18)!=0:print("avarage speed in point (250,3): ",sum(self.total_speeds250_18) / len(self.total_speeds250_18))
