@@ -1,6 +1,7 @@
 {
   "width": 80,
   "height": 80,
+  "cellsize": 1,
   "pedestrians":[
     {"position": [15, 22], "desiredSpeed": 1},
     {"position": [34, 9], "desiredSpeed": 1},

@@ -27,7 +27,7 @@ class MainGUI():
         with open(file_path, 'r') as file:
             data = json.load(file)
 
-        self.scenario = Scenario(data['width'], data['height'])
+        self.scenario = Scenario(data['width'], data['height'], data['cellsize'])
 
         for target in data['targets']:
             self.scenario.grid[target[0], target[1]] = Scenario.NAME2ID['TARGET']
