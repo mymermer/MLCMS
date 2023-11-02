@@ -1,0 +1,14 @@
+{
+  "width": 50,
+  "height": 50,
+  "cellsize": 0.5,
+  "pedestrians": [
+    {"position": [5,25], "desiredSpeed": 1}
+  ],
+  "targets": [
+      [25,25]
+  ],
+  "obstacles": [
+  ]
+}
+
