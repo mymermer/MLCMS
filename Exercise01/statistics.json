@@ -1,12 +1,502 @@
 [
   {
-    "Totaltime": 3.900000000000002,
-    "DesiredSpeed": 5,
+    "Totaltime": 34.30422535211289,
+    "DesiredSpeed": 1.42,
     "Starting_Position": [
-      45,
+      0,
+      6
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.428
+  },
+  {
+    "Totaltime": 34.22893081761027,
+    "DesiredSpeed": 1.59,
+    "Starting_Position": [
+      0,
+      10
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.432
+  },
+  {
+    "Totaltime": 34.24516129032279,
+    "DesiredSpeed": 1.55,
+    "Starting_Position": [
+      0,
+      12
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.431
+  },
+  {
+    "Totaltime": 34.22500000000021,
+    "DesiredSpeed": 1.6,
+    "Starting_Position": [
+      0,
+      14
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.432
+  },
+  {
+    "Totaltime": 34.24935064935086,
+    "DesiredSpeed": 1.54,
+    "Starting_Position": [
+      0,
+      16
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.431
+  },
+  {
+    "Totaltime": 34.253594771242035,
+    "DesiredSpeed": 1.53,
+    "Starting_Position": [
+      0,
+      18
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.431
+  },
+  {
+    "Totaltime": 34.29444444444465,
+    "DesiredSpeed": 1.44,
+    "Starting_Position": [
+      0,
+      20
+    ],
+    "Total_distance": 48.99999999999999,
+    "ActualSpeed": 1.429
+  },
+  {
+    "Totaltime": 34.26666666666687,
+    "DesiredSpeed": 1.5,
+    "Starting_Position": [
+      0,
+      23
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.43
+  },
+  {
+    "Totaltime": 34.30422535211289,
+    "DesiredSpeed": 1.42,
+    "Starting_Position": [
+      0,
+      25
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.428
+  },
+  {
+    "Totaltime": 34.275675675675885,
+    "DesiredSpeed": 1.48,
+    "Starting_Position": [
+      0,
+      27
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.43
+  },
+  {
+    "Totaltime": 34.29930069930091,
+    "DesiredSpeed": 1.43,
+    "Starting_Position": [
+      0,
+      29
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.429
+  },
+  {
+    "Totaltime": 34.23694267515944,
+    "DesiredSpeed": 1.57,
+    "Starting_Position": [
+      0,
+      11
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.431
+  },
+  {
+    "Totaltime": 34.23694267515944,
+    "DesiredSpeed": 1.57,
+    "Starting_Position": [
+      0,
+      15
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.431
+  },
+  {
+    "Totaltime": 34.253594771242035,
+    "DesiredSpeed": 1.53,
+    "Starting_Position": [
+      0,
+      19
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.431
+  },
+  {
+    "Totaltime": 34.29444444444465,
+    "DesiredSpeed": 1.44,
+    "Starting_Position": [
+      0,
+      24
+    ],
+    "Total_distance": 48.99999999999999,
+    "ActualSpeed": 1.429
+  },
+  {
+    "Totaltime": 34.29930069930091,
+    "DesiredSpeed": 1.43,
+    "Starting_Position": [
+      0,
+      28
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.429
+  },
+  {
+    "Totaltime": 34.25789473684231,
+    "DesiredSpeed": 1.52,
+    "Starting_Position": [
+      0,
+      13
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.43
+  },
+  {
+    "Totaltime": 34.275675675675885,
+    "DesiredSpeed": 1.48,
+    "Starting_Position": [
+      0,
+      21
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.43
+  },
+  {
+    "Totaltime": 34.29930069930091,
+    "DesiredSpeed": 1.43,
+    "Starting_Position": [
+      0,
+      26
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.429
+  },
+  {
+    "Totaltime": 34.25789473684231,
+    "DesiredSpeed": 1.52,
+    "Starting_Position": [
+      0,
+      17
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.43
+  },
+  {
+    "Totaltime": 39.181250000000276,
+    "DesiredSpeed": 1.28,
+    "Starting_Position": [
+      0,
+      5
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.251
+  },
+  {
+    "Totaltime": 39.187401574803424,
+    "DesiredSpeed": 1.27,
+    "Starting_Position": [
+      0,
+      8
+    ],
+    "Total_distance": 48.99999999999999,
+    "ActualSpeed": 1.25
+  },
+  {
+    "Totaltime": 39.11942446043193,
+    "DesiredSpeed": 1.39,
+    "Starting_Position": [
+      0,
+      31
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.253
+  },
+  {
+    "Totaltime": 39.135294117647334,
+    "DesiredSpeed": 1.36,
+    "Starting_Position": [
+      0,
+      33
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 39.135294117647334,
+    "DesiredSpeed": 1.36,
+    "Starting_Position": [
+      0,
+      35
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 39.140740740741016,
+    "DesiredSpeed": 1.35,
+    "Starting_Position": [
+      0,
+      37
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 39.140740740741016,
+    "DesiredSpeed": 1.35,
+    "Starting_Position": [
+      0,
+      39
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 39.16335877862623,
+    "DesiredSpeed": 1.31,
+    "Starting_Position": [
+      0,
+      9
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.251
+  },
+  {
+    "Totaltime": 39.1246376811597,
+    "DesiredSpeed": 1.38,
+    "Starting_Position": [
+      0,
+      32
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 39.16923076923104,
+    "DesiredSpeed": 1.3,
+    "Starting_Position": [
+      0,
+      36
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.251
+  },
+  {
+    "Totaltime": 39.1518796992484,
+    "DesiredSpeed": 1.33,
+    "Starting_Position": [
+      0,
+      7
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 39.15757575757603,
+    "DesiredSpeed": 1.32,
+    "Starting_Position": [
+      0,
+      34
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.251
+  },
+  {
+    "Totaltime": 39.140740740741016,
+    "DesiredSpeed": 1.35,
+    "Starting_Position": [
+      0,
+      30
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 39.11428571428599,
+    "DesiredSpeed": 1.4,
+    "Starting_Position": [
+      0,
+      22
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.253
+  },
+  {
+    "Totaltime": 39.14626865671669,
+    "DesiredSpeed": 1.34,
+    "Starting_Position": [
+      0,
+      38
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.252
+  },
+  {
+    "Totaltime": 44.09285714285749,
+    "DesiredSpeed": 1.12,
+    "Starting_Position": [
+      0,
+      2
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.111
+  },
+  {
+    "Totaltime": 44.02644628099208,
+    "DesiredSpeed": 1.21,
+    "Starting_Position": [
+      0,
+      41
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.113
+  },
+  {
+    "Totaltime": 44.09285714285749,
+    "DesiredSpeed": 1.12,
+    "Starting_Position": [
+      0,
+      43
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.111
+  },
+  {
+    "Totaltime": 44.07719298245648,
+    "DesiredSpeed": 1.14,
+    "Starting_Position": [
+      0,
+      42
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.112
+  },
+  {
+    "Totaltime": 44.084955752212736,
+    "DesiredSpeed": 1.13,
+    "Starting_Position": [
+      0,
+      40
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.111
+  },
+  {
+    "Totaltime": 44.084955752212736,
+    "DesiredSpeed": 1.13,
+    "Starting_Position": [
+      0,
+      44
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.111
+  },
+  {
+    "Totaltime": 48.9900990099014,
+    "DesiredSpeed": 1.01,
+    "Starting_Position": [
+      0,
+      46
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.0
+  },
+  {
+    "Totaltime": 48.94339622641551,
+    "DesiredSpeed": 1.06,
+    "Starting_Position": [
+      0,
+      45
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.001
+  },
+  {
+    "Totaltime": 49.00000000000041,
+    "DesiredSpeed": 1.0,
+    "Starting_Position": [
+      0,
+      47
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 1.0
+  },
+  {
+    "Totaltime": 53.841666666667145,
+    "DesiredSpeed": 0.96,
+    "Starting_Position": [
+      0,
+      0
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 0.91
+  },
+  {
+    "Totaltime": 53.88695652173961,
+    "DesiredSpeed": 0.92,
+    "Starting_Position": [
+      0,
       49
     ],
-    "Total_distance": 18.899494936611667,
-    "ActualSpeed": 4.846
+    "Total_distance": 49.0,
+    "ActualSpeed": 0.909
+  },
+  {
+    "Totaltime": 53.841666666667145,
+    "DesiredSpeed": 0.96,
+    "Starting_Position": [
+      0,
+      1
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 0.91
+  },
+  {
+    "Totaltime": 58.80481927710898,
+    "DesiredSpeed": 0.83,
+    "Starting_Position": [
+      0,
+      4
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 0.833
+  },
+  {
+    "Totaltime": 63.61951219512257,
+    "DesiredSpeed": 0.82,
+    "Starting_Position": [
+      0,
+      3
+    ],
+    "Total_distance": 48.99999999999999,
+    "ActualSpeed": 0.77
+  },
+  {
+    "Totaltime": 83.21290322580609,
+    "DesiredSpeed": 0.62,
+    "Starting_Position": [
+      0,
+      48
+    ],
+    "Total_distance": 49.0,
+    "ActualSpeed": 0.589
   }
 ]

@@ -242,13 +242,13 @@ class Pedestrian:
             None
         """
 
-        
-        if (225,18)==(self._position[0],self._position[1]):
-            scenario.speeds225_18.append(self.desired_speed)
-        elif (250, 17) == (self._position[0], self._position[1]):
-            scenario.speeds250_17.append(self.desired_speed)
-        elif (250, 18) == (self._position[0], self._position[1]):
-            scenario.speeds250_18.append(self.desired_speed)
+        if self.total_time!=0:
+            if (225,18)==(self._position[0],self._position[1]):
+                scenario.speeds225_18.append(self.distance_covered/self.total_time)
+            elif (250, 17) == (self._position[0], self._position[1]):
+                scenario.speeds250_17.append(self.distance_covered/self.total_time)
+            elif (250, 18) == (self._position[0], self._position[1]):
+                scenario.speeds250_18.append(self.distance_covered/self.total_time)
 
 
 class Scenario:
@@ -365,8 +365,13 @@ class Scenario:
 
         # saving the statistics to a json file
         if len(self.pedestrians) == 0:
+            # statistics for scenario 7
             with open('./Exercise01/statistics.json', 'w') as file:
                 json.dump(self.speeds, file, indent=2)
+            if len(self.total_speeds225_18)!=0:print("avarage speed in point (225,3): ",sum(self.total_speeds225_18) / len(self.total_speeds225_18)) 
+            if len(self.total_speeds250_17)!=0:print("avarage speed in point (250,2):",sum(self.total_speeds250_17) / len(self.total_speeds250_17))
+            if len(self.total_speeds250_18)!=0:print("avarage speed in point (250,3): ",sum(self.total_speeds250_18) / len(self.total_speeds250_18))
+
 
     @staticmethod
     def cell_to_color(_id):
@@ -476,9 +481,5 @@ class Scenario:
         if len(self.speeds225_18)!=0: self.total_speeds225_18.append(sum(self.speeds225_18) / len(self.speeds225_18))
         if len(self.speeds250_17)!=0:self.total_speeds250_17.append(sum(self.speeds250_17) / len(self.speeds250_17))
         if len(self.speeds250_18)!=0:self.total_speeds250_18.append(sum(self.speeds250_18) / len(self.speeds250_18))
-
+        
         # Check if any of the points reached 60 updates and print the results
-        if len(self.total_speeds250_18)==60 or (self.total_speeds225_18)==60 or (self.total_speeds250_17)==60:
-            if len(self.total_speeds225_18)!=0:print("avarage speed in point (225,3): ",sum(self.total_speeds225_18) / len(self.total_speeds225_18)) 
-            if len(self.total_speeds250_17)!=0:print("avarage speed in point (250,2):",sum(self.total_speeds250_17) / len(self.total_speeds250_17))
-            if len(self.total_speeds250_18)!=0:print("avarage speed in point (250,3): ",sum(self.total_speeds250_18) / len(self.total_speeds250_18))
