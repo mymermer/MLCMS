@@ -10,6 +10,7 @@ class Pedestrian:
     """
     Defines a single pedestrian.
     """
+
     def __init__(self, position, desired_speed):
         """
         Initialize a Pedestrian.
@@ -57,17 +58,18 @@ class Pedestrian:
         Returns:
             list of tuples: A list of neighboring positions as tuples.
         """
-        def condition(x,y):
-            return 0 <= x + self._position[0] < scenario.width and 0 <= y + self._position[1] < scenario.height and np.abs(
-                x) + np.abs(y) > 0 
 
-        neighbours_list=[]
+        def condition(x, y):
+            return 0 <= x + self._position[0] < scenario.width and 0 <= y + self._position[
+                1] < scenario.height and np.abs(
+                x) + np.abs(y) > 0
 
-        environment=[(0,1),(0,-1),(1,0),(-1,0),(1,1),(-1,-1),(1,-1),(-1,1)]
+        neighbours_list = []
 
+        environment = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
 
-        for x,y in environment:
-            if condition(x,y): neighbours_list.append((x + self._position[0] , y + self._position[1] ))
+        for x, y in environment:
+            if condition(x, y): neighbours_list.append((x + self._position[0], y + self._position[1]))
 
         return neighbours_list
 
@@ -87,7 +89,7 @@ class Pedestrian:
             tuple: The updated position based on the Euclidean method.
         """
         next_pos = self._position
-        next_cell_distance= np.inf
+        next_cell_distance = np.inf
         for (n_x, n_y) in neighbours:
             is_next_position_occupied = any(
                 pedestrian.position == (n_x, n_y) for pedestrian in scenario.pedestrians)
@@ -153,9 +155,9 @@ class Pedestrian:
         else:
             return False
 
-
     def update_step(self, scenario: "Scenario", algorithm_choice):
         """
+        
         Update the pedestrian's position and behavior within the scenario.
 
         This method updates the pedestrian's position and behavior based on the chosen algorithm.
@@ -169,7 +171,6 @@ class Pedestrian:
             None
         """
         neighbors = self.get_neighbours(scenario)
-        next_pos = self._position
         if algorithm_choice == "Dijkstra Algorithm":
             # Calculate the estimated cost using Dijkstra's algorithm
             next_cell_distance = scenario.dijkstra.estimate_cost(self._position[0], self._position[1])
@@ -181,7 +182,7 @@ class Pedestrian:
                 self._position = next_pos
                 self.waiting_time = math.sqrt(2) / self._desired_speed if self.check_diagonal(
                     next_pos) else 1 / self._desired_speed
-                self.distance_covered +=self.waiting_time*self._desired_speed
+                self.distance_covered += self.waiting_time * self._desired_speed
             else:
                 # Decrease waiting time and update total time
                 self.waiting_time -= 0.1
@@ -192,15 +193,15 @@ class Pedestrian:
         else:
             # Calculate the distance using the Euclidean method
             neighbors = self.get_neighbours(scenario)
-            next_cell_distance = scenario.euclidean_update_target_grid()[self._position[0]][self._position[1]]
             if not self.waiting:
                 # If not waiting, update the position based on Euclidean method
                 self.waiting = True
                 next_pos = self.update_euclidean_move(neighbors, scenario)
                 # if diagonal increase waiting time to simulate real-life scenario as diagonal moves are longer
-                self.waiting_time = math.sqrt(2) / self._desired_speed if self.check_diagonal(next_pos) else 1 / self._desired_speed
+                self.waiting_time = math.sqrt(2) / self._desired_speed if self.check_diagonal(
+                    next_pos) else 1 / self._desired_speed
                 self._position = next_pos
-                self.distance_covered +=self.waiting_time*self._desired_speed
+                self.distance_covered += self.waiting_time * self._desired_speed
             else:
                 # Decrease waiting time and update total time
                 self.waiting_time -= 0.1
@@ -219,6 +220,7 @@ class Pedestrian:
             None
         """
         self._position = self._starting_position
+
     
     def checkoloc(self,scenario: "Scenario"):
         """
@@ -243,10 +245,11 @@ class Pedestrian:
         
         if (225,18)==(self._position[0],self._position[1]):
             scenario.speeds225_18.append(self.desired_speed)
-        elif (250,17)==(self._position[0],self._position[1]):
+        elif (250, 17) == (self._position[0], self._position[1]):
             scenario.speeds250_17.append(self.desired_speed)
-        elif (250,18)==(self._position[0],self._position[1]):
+        elif (250, 18) == (self._position[0], self._position[1]):
             scenario.speeds250_18.append(self.desired_speed)
+
 
 class Scenario:
     """
@@ -272,7 +275,7 @@ class Scenario:
         ID2NAME[3]: 3
     }
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, cellSize):
         """
         Initialize a Scenario object with a grid of the specified dimensions.
 
@@ -291,19 +294,18 @@ class Scenario:
         self.grid = np.zeros((width, height))
         self.pedestrians = []
         self.speeds = []
+        self.cell_size = cellSize
 
         # there might be problem in deciding height, width in my coding, however, if grid is square it won't be problem.
         self.dijkstra = None
 
-        self.total_speeds225_18=[]
-        self.total_speeds250_17=[]
-        self.total_speeds250_18=[]
+        self.total_speeds225_18 = []
+        self.total_speeds250_17 = []
+        self.total_speeds250_18 = []
 
     def update_cost(self):
         """
-        Uses dijkstra algorthim to calculate cost of the plain.
-        This does not take obstacles into account.
-        :returns: The distance for every grid cell, as a np.ndarray.
+        Uses dijkstra algorithm to calculate cost of the plain.
         """
         targets = []
         for x in range(self.width):
@@ -325,6 +327,7 @@ class Scenario:
 
     def update_step(self, algorithm_choice):
         """
+
         Update the simulation for one time step based on the chosen algorithm.
 
         This function iterates through each pedestrian, updating their position for one time step
@@ -344,19 +347,23 @@ class Scenario:
             
             # Check if a pedestrian reaches the target
             if self.grid[pedestrian._position[0], pedestrian._position[1]] == Scenario.NAME2ID['TARGET']:
-                # Calculate the total time taken to reach the target, considering the final step.
-                pedestrian.total_time += 1/pedestrian._desired_speed
-                
-                # Record pedestrian speed statistics and remove them from the simulation.
-                self.speeds.append({"Totaltime":pedestrian.total_time, "DesiredSpeed":pedestrian._desired_speed, "Starting_Position":pedestrian._starting_position,"Total_distance":pedestrian.distance_covered, "ActualSpeed":round(pedestrian.distance_covered/pedestrian.total_time, 3)})
-                
-                # Print information about the pedestrian's reach and remove them from the simulation.
-                print("Pedestrian at {} reached in time: {}".format(pedestrian._starting_position,round(pedestrian.total_time, 2)))
-                print("Total distance: {}".format(pedestrian.distance_covered))
-                print("Speed of pedestrian: {} m/s".format(round(pedestrian.distance_covered/pedestrian.total_time, 2)))
+
+                # Since target is absorbing,we need to add one more step as the final step is not considered while adding time
+                pedestrian.total_time += 1 / pedestrian._desired_speed
+                speed = round(pedestrian.distance_covered / pedestrian.total_time * self.cell_size, 3)
+                total_distance = pedestrian.distance_covered * self.cell_size
+                self.speeds.append({"Totaltime": pedestrian.total_time, "DesiredSpeed": pedestrian._desired_speed,
+                                    "Starting_Position": pedestrian._starting_position,
+                                    "Total_distance": total_distance,
+                                    "ActualSpeed": speed})
+                print("Pedestrian at {} reached in time: {}".format(pedestrian._starting_position,
+                                                                    round(pedestrian.total_time, 2)))
+                print("Total distance: {}".format(total_distance))
+                print(
+                    "Speed of pedestrian: {} m/s".format(speed))
                 self.pedestrians.remove(pedestrian)
 
-        # Save the speed statistics to a JSON file if there are no more pedestrians in the simulation.
+        # saving the statistics to a json file
         if len(self.pedestrians) == 0:
             with open('./Exercise01/statistics.json', 'w') as file:
                 json.dump(self.speeds, file, indent=2)
@@ -432,6 +439,7 @@ class Scenario:
         distances = distances.reshape((self.width, self.height))
 
         return distances
+
     
 
 
@@ -456,6 +464,9 @@ class Scenario:
         self.speeds250_17=[]
         self.speeds250_18=[]
 
+        self.speeds225_18 = []
+        self.speeds250_17 = []
+        self.speeds250_18 = []
 
         # Iterate over pedestrians and check their locations
         for pedestrian in self.pedestrians:
