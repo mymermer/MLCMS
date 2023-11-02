@@ -10,7 +10,6 @@ class Pedestrian:
     """
     Defines a single pedestrian.
     """
-
     def __init__(self, position, desired_speed):
         self._position = position
         self._desired_speed = desired_speed
@@ -106,6 +105,7 @@ class Pedestrian:
                 self._position = next_pos
                 self.waiting_time = math.sqrt(2) / self._desired_speed if self.check_diagonal(
                     next_pos) else 1 / self._desired_speed
+                self.distance_covered +=self.waiting_time*self._desired_speed
             else:
                 self.waiting_time -= 0.1
                 self.total_time += 0.1
