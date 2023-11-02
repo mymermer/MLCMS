@@ -3,10 +3,8 @@ import math
 from queue import PriorityQueue
 
 
-
 #used for visiulization of cost matrices you can uncomment if you want to visualize cost_matrix:
 # import matplotlib.pyplot as plt
-
 
 
 
@@ -158,7 +156,5 @@ class Dijkstra_algorithm:
                 effect3 = self.cost_matrix[ceil_x][floor_y] / distance3
                 effect4 = self.cost_matrix[floor_x][ceil_y] / distance4
 
-
                 return (effect1 + effect2 + effect3 + effect4) / (
                         1 / distance1 + 1 / distance2 + 1 / distance3 + 1 / distance4) #finding average using inverse proportion
-

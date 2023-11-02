@@ -48,11 +48,9 @@ class Pedestrian:
         """
         Get neighboring positions of the pedestrian within the scenario.
 
-
         This function calculates and returns a list of neighboring positions around the pedestrian's
         current position. Neighboring positions are constrained by the scenario's dimensions and exclude
         the pedestrian's own position.
-
 
         Parameters:
             scenario (Scenario): The scenario object that contains information about the environment.
@@ -91,7 +89,6 @@ class Pedestrian:
             tuple: The updated position based on the Euclidean method.
         """
         next_pos = self._position
-
         next_cell_distance = np.inf
         for (n_x, n_y) in neighbours:
             is_next_position_occupied = any(
@@ -212,7 +209,6 @@ class Pedestrian:
                 if round(self.waiting_time, 2) <= 0:
                     self.waiting = False
 
-
     def reset_step(self):
         """
         Reset the pedestrian's position to its starting position.
@@ -319,7 +315,6 @@ class Scenario:
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
 
-
         check_for_obstacle = np.zeros((self.width, self.height))
 
         for x in range(self.width):
@@ -329,8 +324,6 @@ class Scenario:
         self.dijkstra = Dijkstra_algorithm(self.height, self.width, targets,
                                            check_for_obstacle)  # cost regarding to Dijkstra_algorithm
         self.dijkstra.execute()
-
-
 
     def update_step(self, algorithm_choice):
         """
@@ -351,7 +344,6 @@ class Scenario:
 
         for pedestrian in self.pedestrians:
             pedestrian.update_step(self, algorithm_choice)
-
             
             # Check if a pedestrian reaches the target
             if self.grid[pedestrian._position[0], pedestrian._position[1]] == Scenario.NAME2ID['TARGET']:
@@ -402,7 +394,6 @@ class Scenario:
 
 
 
-
     def euclidean_update_target_grid(self):
         """
         Compute the Euclidean distance from each grid cell to the nearest target.
@@ -417,7 +408,6 @@ class Scenario:
         """
         
         # Find the positions of all targets on the grid.
-
         targets = []
         for x in range(self.width):
             for y in range(self.height):
@@ -425,7 +415,6 @@ class Scenario:
                     targets.append([y, x])  # y and x are flipped because they are in image space.
         if len(targets) == 0:
             return np.zeros((self.width, self.height))
-
 
         # Convert the target positions to a numpy array.
         targets = np.row_stack(targets)
@@ -493,4 +482,3 @@ class Scenario:
             if len(self.total_speeds225_18)!=0:print("avarage speed in point (225,3): ",sum(self.total_speeds225_18) / len(self.total_speeds225_18)) 
             if len(self.total_speeds250_17)!=0:print("avarage speed in point (250,2):",sum(self.total_speeds250_17) / len(self.total_speeds250_17))
             if len(self.total_speeds250_18)!=0:print("avarage speed in point (250,3): ",sum(self.total_speeds250_18) / len(self.total_speeds250_18))
-

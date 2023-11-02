@@ -13,7 +13,6 @@ class MainGUI():
         self.canvas = None
         self.canvas_image = None
         self.scenario = None
-
         self.directory_of_scenario = 'Exercise01/scenarios/dummy_test_for_dijkstra.json' # 'dummy_test_for_dijkstra.json'
         self.algorithm_choice = None
         self.restart_clicked=bool()
@@ -30,7 +29,6 @@ class MainGUI():
 
         self.scenario = Scenario(data['width'], data['height'], data['cellsize'])
 
-
         for target in data['targets']:
             self.scenario.grid[target[0], target[1]] = Scenario.NAME2ID['TARGET']
 
@@ -45,7 +43,6 @@ class MainGUI():
             self.scenario.grid[obstacle[0], obstacle[1]] = Scenario.NAME2ID['OBSTACLE']
 
         self.scenario.to_image(self.canvas, self.canvas_image)
-
 
         self.scenario.update_cost()
 
@@ -88,7 +85,6 @@ class MainGUI():
         if self.scenario:
             self.scenario.update_step(self.algorithm_choice.get())
             self.scenario.to_image(self.canvas, self.canvas_image)
-
         else:
             print('No scenario loaded. Load a scenario before stepping.')
 
@@ -105,8 +101,6 @@ class MainGUI():
     def exit_gui(self):
         sys.exit()
 
-
-
     def start_gui(self):
         self.win = tkinter.Tk()
         self.win.geometry('600x600')
@@ -121,7 +115,6 @@ class MainGUI():
         file_menu.add_command(label='Close', command=self.exit_gui)
 
         self.canvas = Canvas(self.win, width=Scenario.GRID_SIZE[0], height=Scenario.GRID_SIZE[1])
-
         self.canvas_image = self.canvas.create_image(40, 120, image=None, anchor=tkinter.NW)
         self.canvas.pack(expand=1, fill=tkinter.BOTH)
         self.load_scenario(self.directory_of_scenario)
@@ -133,11 +126,9 @@ class MainGUI():
         rb1.place(x=20, y=10)
         rb2 = Radiobutton(self.win, text='Dijkstra Algorithm', variable=self.algorithm_choice,
                           value="Dijkstra Algorithm")
-
         rb2.place(x=200, y=10)
 
         self.algorithm_choice.set("Dijkstra Algorithm")
-
 
         btn = Button(self.win, text='Step simulation',
                      command=lambda: (rb1.config(state="disabled"), rb2.config(state="disabled"), self.step_scenario()))
@@ -275,4 +266,3 @@ class MainGUI():
 
     def close_win(self, top):
         top.destroy()
-
