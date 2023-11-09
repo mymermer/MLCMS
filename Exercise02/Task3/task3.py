@@ -34,13 +34,18 @@ def add_pedestrian(scenario_path, x, y):
 
 # make a new JSON file in the same path as the former scenario
 def update_new_scenario(scenario_path, new_scenario):
-    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-    base_name, ext = os.path.splitext(scenario_path)
-    new_file_path = f"{base_name}_updated{timestamp}{ext}"
-    with open(new_file_path, 'w') as json_file:
-        json.dump(new_scenario, json_file, indent=4)
+    try:
+        timestamp = datetime.now().strftime('%Y%m%d%H%M')
+        base_name, ext = os.path.splitext(scenario_path)
+        new_file_path = f"{base_name}_updated{timestamp}{ext}"
+        with open(new_file_path, 'w') as json_file:
+            json.dump(new_scenario, json_file, indent=4)
+        print(f"Scenario successfully updated at {new_file_path}")
+    except Exception as e:
+        print(f"An error occurred while writing the file: {e}")
+
 
 if __name__ == '__main__':
-    scenario_path = 'C:/Users/AhnNayeon/gitrepo/MLCMS_Exercises/Exercise02/task3/scenarios/RimeaTest6.scenario'
-    new_scenario = add_pedestrian(scenario_path, 8.5, 2)
+    scenario_path = 'C:/mlcms/MLCMS_Exercises/Exercise02/Task3/scenarios/RimeaTest6.scenario'
+    new_scenario = add_pedestrian(scenario_path, 8.7, 1.3)
     update_new_scenario(scenario_path, new_scenario)
