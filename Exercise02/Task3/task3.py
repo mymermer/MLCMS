@@ -46,6 +46,14 @@ def update_new_scenario(scenario_path, new_scenario):
 
 
 if __name__ == '__main__':
-    scenario_path = 'C:/mlcms/MLCMS_Exercises/Exercise02/Task3/scenarios/RimeaTest6.scenario'
-    new_scenario = add_pedestrian(scenario_path, 8.7, 1.3)
+    scenario_path = 'C:/mlcms/MLCMS_Exercises/Exercise02/Task3/scenarios/rimea6_mod.scenario'
+    new_scenario = add_pedestrian(scenario_path, 12, 3)
     update_new_scenario(scenario_path, new_scenario)
+
+
+###to checkout the new scenario
+#run the new scenario in console first and open in gui 
+# type below it in console.
+# java -jar vadere-console.jar scenario-run  --output-dir youroutputfolder --scenario-file yourscenario file folder 
+# java -jar vadere-gui.jar and then scenario tab, open
+
