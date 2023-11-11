@@ -12,3 +12,7 @@ vadere/
 
 Exercise02/output
 
+Exercise02/scenarios
+
+#ignore pycache files produced by python
+__pycache__/
