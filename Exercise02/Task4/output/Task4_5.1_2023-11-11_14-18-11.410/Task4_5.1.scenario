@@ -1,5 +1,5 @@
 {
-  "name" : "task4_chicken",
+  "name" : "Task4_5.1",
   "description" : "",
   "release" : "3.0",
   "commithash" : "No version control commit hash available!",
@@ -16,10 +16,6 @@
       "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.NoDataKeyOutputFile",
       "filename" : "overlapCount.txt",
       "processors" : [ 4 ]
-    }, {
-      "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.EventtimePedestrianIdOutputFile",
-      "filename" : "SIRinformation.csv",
-      "processors" : [ 5 ]
     } ],
     "processors" : [ {
       "type" : "org.vadere.simulator.projects.dataprocessing.processor.FootStepProcessor",
@@ -37,9 +33,6 @@
       "attributes" : {
         "pedestrianOverlapProcessorId" : 3
       }
-    }, {
-      "type" : "org.vadere.simulator.projects.dataprocessing.processor.FootStepGroupIDProcessor",
-      "id" : 5
     } ],
     "isTimestamped" : true,
     "isWriteMetaData" : false
@@ -101,7 +94,7 @@
       },
       "org.vadere.state.attributes.models.AttributesSIRG" : {
         "infectionsAtStart" : 0,
-        "infectionRate" : 0.01,
+        "infectionRate" : 0.1,
         "infectionMaxDistance" : 1.0
       }
     },
@@ -114,8 +107,8 @@
       "printFPS" : false,
       "digitsPerCoordinate" : 2,
       "useFixedSeed" : true,
-      "fixedSeed" : -6727282014608107702,
-      "simulationSeed" : -6727282014608107702
+      "fixedSeed" : 8767342921789045428,
+      "simulationSeed" : 8767342921789045428
     },
     "attributesPsychology" : {
       "usePsychologyLayer" : false,
@@ -143,79 +136,39 @@
         "bounds" : {
           "x" : 0.0,
           "y" : 0.0,
-          "width" : 10.0,
-          "height" : 10.0
+          "width" : 20.0,
+          "height" : 20.0
         },
         "boundingBoxWidth" : 0.5,
         "bounded" : true,
         "referenceCoordinateSystem" : null
       },
-      "obstacles" : [ {
-        "id" : 7,
-        "shape" : {
-          "type" : "POLYGON",
-          "points" : [ {
-            "x" : 6.000000000000009,
-            "y" : 4.025764895330109
-          }, {
-            "x" : 6.0293075684380035,
-            "y" : 4.025764895330113
-          }, {
-            "x" : 6.0293075684380035,
-            "y" : 6.698872785829307
-          }, {
-            "x" : 6.0,
-            "y" : 6.7
-          }, {
-            "x" : 5.829307568438003,
-            "y" : 6.698872785829307
-          }, {
-            "x" : 4.0,
-            "y" : 6.7
-          }, {
-            "x" : 4.0,
-            "y" : 6.5
-          }, {
-            "x" : 5.8293075684380025,
-            "y" : 6.5
-          }, {
-            "x" : 5.8293075684380025,
-            "y" : 4.200000000000001
-          }, {
-            "x" : 4.0,
-            "y" : 4.2
-          }, {
-            "x" : 4.0,
-            "y" : 4.0
-          }, {
-            "x" : 6.0,
-            "y" : 4.0
-          } ]
-        },
-        "visible" : true
-      } ],
+      "obstacles" : [ ],
       "measurementAreas" : [ ],
       "stairs" : [ ],
       "targets" : [ {
-        "id" : 2,
+        "id" : 1,
         "shape" : {
-          "x" : 9.0,
-          "y" : 5.0,
-          "width" : 0.5,
-          "height" : 1.0,
+          "x" : 0.5,
+          "y" : 0.4,
+          "width" : 19.0,
+          "height" : 19.1,
           "type" : "RECTANGLE"
         },
         "visible" : true,
         "absorber" : {
-          "enabled" : true,
+          "enabled" : false,
           "deletionDistance" : 0.1
         },
         "waiter" : {
           "enabled" : false,
-          "distribution" : null,
+          "distribution" : {
+            "type" : "org.vadere.state.attributes.distributions.AttributesConstantDistribution",
+            "updateFrequency" : 1.0
+          },
           "individualWaiting" : true
         },
-        "leavingSpeed" : 0.0,
+        "leavingSpeed" : -1.0,
         "parallelEvents" : 0
       } ],
       "targetChangers" : [ ],
@@ -223,25 +176,25 @@
       "aerosolClouds" : [ ],
       "droplets" : [ ],
       "sources" : [ {
-        "id" : 1,
+        "id" : 2,
         "shape" : {
-          "x" : 0.5,
-          "y" : 5.0,
-          "width" : 0.5,
-          "height" : 1.0,
+          "x" : 1.7,
+          "y" : 1.4,
+          "width" : 16.7,
+          "height" : 16.9,
           "type" : "RECTANGLE"
         },
         "visible" : true,
-        "targetIds" : [ 2 ],
+        "targetIds" : [ 1 ],
         "spawner" : {
           "type" : "org.vadere.state.attributes.spawner.AttributesRegularSpawner",
           "constraintsElementsMax" : -1,
           "constraintsTimeStart" : 0.0,
           "constraintsTimeEnd" : 0.0,
-          "eventPositionRandom" : false,
+          "eventPositionRandom" : true,
           "eventPositionGridCA" : false,
           "eventPositionFreeSpace" : true,
-          "eventElementCount" : 1,
+          "eventElementCount" : 1000,
           "eventElement" : null,
           "distribution" : {
             "type" : "org.vadere.state.attributes.distributions.AttributesConstantDistribution",
