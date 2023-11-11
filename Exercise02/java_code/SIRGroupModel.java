@@ -32,8 +32,8 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 	private Topography topography;
 	private IPotentialFieldTarget potentialFieldTarget;
 	private int totalInfected = 0;
-
-	private double simTimeInSecPrevious = 0;
+	private double elapsedTime = 0;
+	private double prevTime = 0;
 
 	public SIRGroupModel() {
 		this.groupsById = new LinkedHashMap<>();
@@ -184,30 +184,38 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 
 	@Override
 	public void update(final double simTimeInSec) {
-
 		// check the positions of all pedestrians and switch groups to INFECTED (or REMOVED).
 		DynamicElementContainer<Pedestrian> c = topography.getPedestrianDynamicElements();
 
-		if (c.getElements().size() > 0) {
-			for(Pedestrian p : c.getElements()) {
-				// loop over neighbors and set infected if we are close
-				for(Pedestrian p_neighbor : c.getElements()) {
-					if(p == p_neighbor || getGroup(p_neighbor).getID() != SIRType.ID_INFECTED.ordinal())
+		//checking elapsed time for simulation
+		elapsedTime+=simTimeInSec - prevTime;
+
+		// Try to discretize the time to 1 second to reduce the dependency on simTimeInSec
+		if(elapsedTime>=1.0){
+			elapsedTime = 0;
+			prevTime = simTimeInSec;
+			if (c.getElements().size() > 0) {
+				for(Pedestrian p : c.getElements()) {
+					// loop over neighbors and set infected if we are close
+					if(getGroup(p).getID() == SIRType.ID_INFECTED.ordinal())
 						continue;
-					double dist = p.getPosition().distance(p_neighbor.getPosition());
-					if (dist < attributesSIRG.getInfectionMaxDistance() &&
-							this.random.nextDouble() < (attributesSIRG.getInfectionRate()*(simTimeInSec - simTimeInSecPrevious)/0.4)) { //decoupling infection rate, you can change numer 0.4
-						SIRGroup g = getGroup(p);
-						if (g.getID() == SIRType.ID_SUSCEPTIBLE.ordinal()) {
-							elementRemoved(p);
-							assignToGroup(p, SIRType.ID_INFECTED.ordinal());
+					List<Pedestrian> pNeighbors = c.getCellsElements().getObjects(p.getPosition(), attributesSIRG.getInfectionMaxDistance());
+					for(Pedestrian p_neighbor : c.getElements()) {
+						if(p == p_neighbor || getGroup(p_neighbor).getID() != SIRType.ID_INFECTED.ordinal())
+							continue;
+						double dist = p.getPosition().distance(p_neighbor.getPosition());
+						if (dist < attributesSIRG.getInfectionMaxDistance() &&
+								this.random.nextDouble() < attributesSIRG.getInfectionRate()) {
+							SIRGroup g = getGroup(p);
+							if (g.getID() == SIRType.ID_SUSCEPTIBLE.ordinal()) {
+								elementRemoved(p);
+								assignToGroup(p, SIRType.ID_INFECTED.ordinal());
+							}
 						}
 					}
 				}
 			}
 		}
-
-		simTimeInSecPrevious= simTimeInSec; //update previous time
 
 
 	}
