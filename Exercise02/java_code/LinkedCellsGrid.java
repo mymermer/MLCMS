@@ -284,10 +284,9 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 					result.add((T) obj);
 				}
 
-				
+
 			}
 		}
-
 		return result;
 	}
 
@@ -303,13 +302,39 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 	 * @param object
 	 */
 	public synchronized void removeObject(T object) {
+
+		// Create an Envelope representing the spatial extent of the object
+		Envelope envelope = new Envelope(
+				object.getPosition().getX(),
+				object.getPosition().getX(),
+				object.getPosition().getY(),
+				object.getPosition().getY()
+		);
+
+		quadTree.remove(envelope, object);
+
+
+
+
 		int[] gridPos = gridPos(object.getPosition());
 		if(grid[gridPos[0]][gridPos[1]].objects.removeIf(element -> element.equals(object))){
 			size--;
 		}
+
 	}
 
 	public synchronized void removeObject(T object, final VPoint oldPosition) {
+
+		// Create an Envelope representing the spatial extent of the object
+		Envelope envelope = new Envelope(
+				oldPosition.getX(),
+				oldPosition.getX(),
+				oldPosition.getY(),
+				oldPosition.getY()
+		);
+
+		quadTree.remove(envelope, object);
+
 		int[] gridPos = gridPos(oldPosition);
 		if(grid[gridPos[0]][gridPos[1]].objects.removeIf(element -> element.equals(object))){
 			size--;
@@ -322,6 +347,7 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 	public void clear() {
 		grid = generateGrid(gridSize[0], gridSize[1]);
 		size = 0;
+		quadTree= new Quadtree();
 	}
 
 	public List<T> getElements() {
