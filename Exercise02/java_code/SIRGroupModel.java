@@ -32,6 +32,7 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 	private Topography topography;
 	private IPotentialFieldTarget potentialFieldTarget;
 	private int totalInfected = 0;
+	private int totalRemoved = 0;
 	private double elapsedTime = 0;
 	private double prevTime = 0;
 
@@ -47,6 +48,7 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 		this.topography = domain.getTopography();
 		this.random = random;
         this.totalInfected = 0;
+		this.totalRemoved =0;
 	}
 
 	@Override
@@ -211,6 +213,13 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 								elementRemoved(p);
 								assignToGroup(p, SIRType.ID_INFECTED.ordinal());
 							}
+						}
+					}
+					if (getGroup(p).getID() == SIRType.ID_INFECTED.ordinal()) {
+						// Check if the infected pedestrian should be removed
+						if (this.random.nextDouble() < attributesSIRG.getRecoveredfixedRate()) { // fixed removal probability (20% here)
+							elementRemoved(p);
+							assignToGroup(p, SIRType.ID_REMOVED.ordinal());
 						}
 					}
 				}
