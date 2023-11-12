@@ -200,28 +200,27 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 				for(Pedestrian p : c.getElements()) {
 					// loop over neighbors and set infected if we are close
 					if(getGroup(p).getID() == SIRType.ID_INFECTED.ordinal())
-						continue;
-					List<Pedestrian> pNeighbors = c.getCellsElements().getObjects(p.getPosition(), attributesSIRG.getInfectionMaxDistance());
-					for(Pedestrian p_neighbor : c.getElements()) {
-						if(p == p_neighbor || getGroup(p_neighbor).getID() != SIRType.ID_INFECTED.ordinal())
-							continue;
-						double dist = p.getPosition().distance(p_neighbor.getPosition());
-						if (dist < attributesSIRG.getInfectionMaxDistance() &&
-								this.random.nextDouble() < attributesSIRG.getInfectionRate()) {
-							SIRGroup g = getGroup(p);
-							if (g.getID() == SIRType.ID_SUSCEPTIBLE.ordinal()) {
-								elementRemoved(p);
-								assignToGroup(p, SIRType.ID_INFECTED.ordinal());
-							}
-						}
-					}
-					if (getGroup(p).getID() == SIRType.ID_INFECTED.ordinal()) {
 						// Check if the infected pedestrian should be removed
-						if (this.random.nextDouble() < attributesSIRG.getRecoveredfixedRate()) { // fixed removal probability (20% here)
+						if (this.random.nextDouble() < attributesSIRG.getRecoveredfixedRate()) { // 20% removal probability
 							elementRemoved(p);
 							assignToGroup(p, SIRType.ID_REMOVED.ordinal());
+							continue;
 						}
-					}
+						List<Pedestrian> pNeighbors = c.getCellsElements().getObjects(p.getPosition(), attributesSIRG.getInfectionMaxDistance());
+						for (Pedestrian p_neighbor : c.getElements()) {
+							if (p == p_neighbor || getGroup(p_neighbor).getID() != SIRType.ID_INFECTED.ordinal())
+								continue;
+							double dist = p.getPosition().distance(p_neighbor.getPosition());
+							if (dist < attributesSIRG.getInfectionMaxDistance() &&
+									this.random.nextDouble() < attributesSIRG.getInfectionRate()) {
+								SIRGroup g = getGroup(p);
+								if (g.getID() == SIRType.ID_SUSCEPTIBLE.ordinal()) {
+									elementRemoved(p);
+									assignToGroup(p, SIRType.ID_INFECTED.ordinal());
+								}
+							}
+						}
+
 				}
 			}
 		}
