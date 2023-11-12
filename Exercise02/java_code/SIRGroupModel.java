@@ -208,8 +208,9 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 						}
 						List<Pedestrian> pNeighbors = c.getCellsElements().getObjects(p.getPosition(), attributesSIRG.getInfectionMaxDistance());
 						for (Pedestrian p_neighbor : c.getElements()) {
-							if (p == p_neighbor || getGroup(p_neighbor).getID() != SIRType.ID_INFECTED.ordinal())
+							if (p == p_neighbor || getGroup(p_neighbor).getID() != SIRType.ID_INFECTED.ordinal()) {
 								continue;
+							}
 							double dist = p.getPosition().distance(p_neighbor.getPosition());
 							if (dist < attributesSIRG.getInfectionMaxDistance() &&
 									this.random.nextDouble() < attributesSIRG.getInfectionRate()) {
