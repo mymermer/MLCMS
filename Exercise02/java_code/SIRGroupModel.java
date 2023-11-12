@@ -48,7 +48,7 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 		this.topography = domain.getTopography();
 		this.random = random;
         this.totalInfected = 0;
-		this.totalRemoved =0;
+		this.totalRemoved = 0;
 	}
 
 	@Override
@@ -66,20 +66,26 @@ public class SIRGroupModel extends AbstractGroupModel<SIRGroup> {
 	}
 
 	private int getFreeGroupId() {
-		if(this.random.nextDouble() < this.attributesSIRG.getInfectionRate()
-        || this.totalInfected < this.attributesSIRG.getInfectionsAtStart()) {
-			if(!getGroupsById().containsKey(SIRType.ID_INFECTED.ordinal()))
-			{
-				SIRGroup g = getNewGroup(SIRType.ID_INFECTED.ordinal(), Integer.MAX_VALUE/2);
+		double randomValue = this.random.nextDouble();
+
+		if (randomValue < this.attributesSIRG.getInfectionRate()
+				|| this.totalInfected < this.attributesSIRG.getInfectionsAtStart()) {
+			if (!getGroupsById().containsKey(SIRType.ID_INFECTED.ordinal())) {
+				SIRGroup g = getNewGroup(SIRType.ID_INFECTED.ordinal(), Integer.MAX_VALUE / 2);
 				getGroupsById().put(SIRType.ID_INFECTED.ordinal(), g);
 			}
-            this.totalInfected += 1;
+			this.totalInfected += 1;
 			return SIRType.ID_INFECTED.ordinal();
-		}
-		else{
-			if(!getGroupsById().containsKey(SIRType.ID_SUSCEPTIBLE.ordinal()))
-			{
-				SIRGroup g = getNewGroup(SIRType.ID_SUSCEPTIBLE.ordinal(), Integer.MAX_VALUE/2);
+		} else if (randomValue >= this.attributesSIRG.getInfectionRate() && randomValue < this.attributesSIRG.getInfectionRate() + this.attributesSIRG.getRecoveredfixedRate()) {
+			if (!getGroupsById().containsKey(SIRType.ID_REMOVED.ordinal())) {
+				SIRGroup g = getNewGroup(SIRType.ID_REMOVED.ordinal(), Integer.MAX_VALUE / 2);
+				getGroupsById().put(SIRType.ID_REMOVED.ordinal(), g);
+			}
+			this.totalRemoved += 1;
+			return SIRType.ID_REMOVED.ordinal();
+		} else {
+			if (!getGroupsById().containsKey(SIRType.ID_SUSCEPTIBLE.ordinal())) {
+				SIRGroup g = getNewGroup(SIRType.ID_SUSCEPTIBLE.ordinal(), Integer.MAX_VALUE / 2);
 				getGroupsById().put(SIRType.ID_SUSCEPTIBLE.ordinal(), g);
 			}
 			return SIRType.ID_SUSCEPTIBLE.ordinal();
