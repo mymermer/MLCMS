@@ -16,6 +16,10 @@
       "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.NoDataKeyOutputFile",
       "filename" : "overlapCount.txt",
       "processors" : [ 4 ]
+    }, {
+      "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.EventtimePedestrianIdOutputFile",
+      "filename" : "SIRInformation.csv",
+      "processors" : [ 5 ]
     } ],
     "processors" : [ {
       "type" : "org.vadere.simulator.projects.dataprocessing.processor.FootStepProcessor",
@@ -33,6 +37,9 @@
       "attributes" : {
         "pedestrianOverlapProcessorId" : 3
       }
+    }, {
+      "type" : "org.vadere.simulator.projects.dataprocessing.processor.FootStepGroupIDProcessor",
+      "id" : 5
     } ],
     "isTimestamped" : true,
     "isWriteMetaData" : false
@@ -94,13 +101,13 @@
       },
       "org.vadere.state.attributes.models.AttributesSIRG" : {
         "infectionsAtStart" : 0,
-        "infectionRate" : 0.1,
+        "infectionRate" : 0.05,
         "infectionMaxDistance" : 1.0
       }
     },
     "attributesSimulation" : {
       "finishTime" : 500.0,
-      "simTimeStepLength" : 0.4,
+      "simTimeStepLength" : 0.5,
       "realTimeSimTimeRatio" : 0.1,
       "writeSimulationData" : true,
       "visualizationEnabled" : true,
@@ -149,10 +156,10 @@
       "targets" : [ {
         "id" : 1,
         "shape" : {
-          "x" : 0.5,
-          "y" : 0.4,
-          "width" : 19.0,
-          "height" : 19.1,
+          "x" : 0.0,
+          "y" : 0.0,
+          "width" : 20.0,
+          "height" : 20.0,
           "type" : "RECTANGLE"
         },
         "visible" : true,
@@ -178,10 +185,10 @@
       "sources" : [ {
         "id" : 2,
         "shape" : {
-          "x" : 1.7,
-          "y" : 1.4,
-          "width" : 16.7,
-          "height" : 16.9,
+          "x" : 0.5,
+          "y" : 0.5,
+          "width" : 19.0,
+          "height" : 19.0,
           "type" : "RECTANGLE"
         },
         "visible" : true,
