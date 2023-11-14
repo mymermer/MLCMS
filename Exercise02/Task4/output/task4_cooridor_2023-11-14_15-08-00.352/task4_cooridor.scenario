@@ -18,7 +18,7 @@
       "processors" : [ 4 ]
     }, {
       "type" : "org.vadere.simulator.projects.dataprocessing.outputfile.EventtimePedestrianIdOutputFile",
-      "filename" : "SIRinfortmation.csv",
+      "filename" : "SIRInformation.csv",
       "processors" : [ 5 ]
     } ],
     "processors" : [ {
@@ -38,7 +38,7 @@
         "pedestrianOverlapProcessorId" : 3
       }
     }, {
-      "type" : "org.vadere.simulator.projects.dataprocessing.processor.FootStepTargetIDProcessor",
+      "type" : "org.vadere.simulator.projects.dataprocessing.processor.FootStepGroupIDProcessor",
       "id" : 5
     } ],
     "isTimestamped" : true,
