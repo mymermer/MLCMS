@@ -167,7 +167,7 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 		this.width = width;
 		this.height = height;
 		this.size = 0;
-		this.quadTree = new Quadtree();
+		this.quadTree = new Quadtree(); //quad tree deifned here
 
 
 		// create grid
@@ -219,11 +219,10 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 		return count;
 	}
 
+
 	/**
-	 * Adds a given object to the grid at position of the object. The position is
-	 * discretized automatically to fit in the cells.
-	 *
-	 * @param object object to add
+	 * Adds the given object to the grid and the QuadTree.
+	 * @param object the object to be added
 	 */
 	public synchronized void addObject(final T object) {
 		int[] gridPos = gridPos(object.getPosition());
@@ -251,16 +250,14 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 		addObject(object);
 	}
 
-	/**
-	 * Returns a set of objects in the ball around pos with given radius.
-	 *
-	 * @param pos
-	 *        position of the center of the ball
-	 * @param radius
-	 *        radius of the ball
-	 * @return set of objects, or an empty set if no objects are present.
-	 */
 
+
+	/**
+	 * Returns a list of objects within a certain radius of a given position using quadTree.
+	 * @param pos The center position to search around.
+	 * @param radius The radius to search within.
+	 * @return A list of objects within the search radius.
+	 */
 	public synchronized List<T> getObjects(final VPoint pos, final double radius) {
 		final List<T> result = new LinkedList<>();
 
@@ -278,7 +275,7 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 
 		// Filter potential neighbors based on the actual distance
 		for (Object obj : potentialNeighbors) {
-			if (obj instanceof PointPositioned) { //****************************************************
+			if (obj instanceof PointPositioned) {
 				PointPositioned pointPositioned = (PointPositioned) obj;
 				if (pointPositioned.getPosition().distance(pos) < radius) {
 					result.add((T) obj);
@@ -294,12 +291,11 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 
 
 
+
 	/**
-	 * Removes the objects equal to the given object from the grid regardless of
-	 * their position. Note that this function has complexity O(N), with N =
-	 * number of objects in the grid.
-	 *
-	 * @param object
+	 * Removes the specified object from the grid and quadtree.
+	 * 
+	 * @param object the object to be removed
 	 */
 	public synchronized void removeObject(T object) {
 
@@ -323,6 +319,12 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 
 	}
 
+	/**
+	 * Removes the given object from the grid and quadtree at the given old position.
+	 * 
+	 * @param object the object to be removed
+	 * @param oldPosition the old position of the object
+	 */
 	public synchronized void removeObject(T object, final VPoint oldPosition) {
 
 		// Create an Envelope representing the spatial extent of the object
@@ -342,7 +344,7 @@ public class LinkedCellsGrid<T extends PointPositioned> implements Iterable<T> {
 	}
 
 	/**
-	 * Removes all objects.
+	 * Removes all objects from the grid and quadTree.
 	 */
 	public void clear() {
 		grid = generateGrid(gridSize[0], gridSize[1]);
