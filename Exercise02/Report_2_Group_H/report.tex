@@ -1,0 +1,81 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{subcaption}
+\usepackage{graphicx}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MODIFY:
+
+\newcommand{\authorA}{Muhammed Yusuf Mermer (***REMOVED***)}
+\newcommand{\authorB}{Milena Schwarz (***REMOVED***)}
+\newcommand{\authorC}{Antonia Gobillard (***REMOVED***)}
+\newcommand{\authorD}{Nayeon Ahn (***REMOVED***)}
+\newcommand{\authorE}{Hammad Basit (***REMOVED***)}
+\newcommand{\teamlead}{~\textbf{Project lead}}
+\newcommand{\groupNumber}{H} % - YOUR GROUP NUMBER
+\newcommand{\exerciseNumber}{2} % - THE NUMBER OF THE EXERCISE
+\newcommand{\sourceCodeLink}{https://github.com/Hammad-7/MLCMS\_Exercises.git}
+
+\newcommand{\workPerAuthor}{
+\authorA \teamlead& Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorB & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorC & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorD & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorE & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./imports.tex}
+
+\begin{document}
+
+\frontpage
+
+\begin{task}{1, Setting up the Vadere environment}
+\input{task/1.tex}
+\end{task}
+
+\begin{task}{2, Simulation of the scenario with a different model}
+\input{task/2.tex}
+\end{task}
+
+\begin{task}{3, Using the console interface from Vadere}
+\input{task/3}
+\end{task}
+
+\begin{task}{4, Integrating a new model}
+\input{task/4}
+\end{task}
+
+\begin{task}{5, Analysis and visualization of results}
+\input{task/5}
+\end{task}
+
+\bibliographystyle{plain}
+\bibliography{Literature}
+
+\end{document}
