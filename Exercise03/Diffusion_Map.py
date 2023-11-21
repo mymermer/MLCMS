@@ -9,7 +9,7 @@ def diffusion_map(data:"np.ndarray",L : int ,epsilon :float =0.05):
     distance_matrix_D = squareform(distances)
     
     
-    kernel_matrix_W = np.exp(-distance_matrix_D**2/epsilon**2)  # kernel matrix W_ij
+    kernel_matrix_W = np.exp(-distance_matrix_D**2/epsilon)  # kernel matrix W_ij
     diagonal_normalization_matrix_P = np.diag(np.sum( kernel_matrix_W,axis=1)) # diagonal normalization matrix P_ii
 
 
