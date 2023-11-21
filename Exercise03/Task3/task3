@@ -1,0 +1,44 @@
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load and preprocess MNIST data
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+
+# Normalize pixel values between 0 and 1 : xhen normalizing pixel values, the typical range for pixel values in images is between 0 and 255 
+# for grayscale images (0 being black and 255 being white). 
+x_train = x_train.astype('float32') / 255.0
+x_test = x_test.astype('float32') / 255.0
+
+# Reshape images to a flattened format :  each image is initially represented as a 28x28 array of pixel values (2D array). 
+# To feed this data into a neural network, it needs to be converted into a single vector with 784 (28x28) elements (1D array).
+x_train = x_train.reshape(x_train.shape[0], -1)
+x_test = x_test.reshape(x_test.shape[0], -1)
+
+"""
+# Visualisation of the first six images in x_train
+plt.figure(figsize=(8, 2))
+for i in range(6):
+    plt.subplot(1, 6, i+1)
+    plt.imshow(x_train[i].reshape(28, 28), cmap="gray_r") # resizes the images to 28x28 pixels
+    plt.title('Label = %d' % y_train[i], fontsize=14) # displays the images along with their corresponding labels from y_train
+    plt.axis("off")
+plt.tight_layout()
+plt.show()
+"""
+"""
+# Visualisation of the shapes of the training and test data
+print('x_train shape:', x_train.shape)
+print('x_test shape:', x_test.shape)
+print('y_train shape:', y_train.shape)
+print('y_test shape:', y_test.shape)
+
+print(x_train.shape[0], 'train samples')
+print(x_test.shape[0], 'test samples')
+"""
+
+
+
+
