@@ -39,6 +39,64 @@ print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 """
 
+latent_dim = 2 # dimension of the latent space
+
+batch_size = 128 # batch size for training
+
+# multivariate diagonal Gaussian distribution as approximate posterior qφ(z|x) and as likelihood pθ(x|z)
+
+tfd = tf.contrib.distributions
+
+def make_encoder(data, code_size):
+    """
+    Define the encoder 
+    The encoder is a neural network that takes the input data and outputs a probability distribution, the approximate posterior qφ(z|x) over the latent space. 
+    It that learns the parameters (mean and variance) of the underlying latent distribution.
+    """
+    x = tf.keras.layers.Flatten()(data) #It reshapes the input data into a 1D array -> not necessary here !
+    x = tf.keras.layers.Dense(256, activation='relu')(x)
+    x = tf.keras.layers.Dense(256, activation='relu')(x)
+    loc = tf.keras.layers.Dense(code_size)(x)           # outputs the mean parameters for the Multivariate Normal Diagonal distribution. It has code_size units.
+    scale = tf.keras.layers.Dense(code_size, activation='softplus')(x) # outputs the scale (standard deviation) parameters for the Multivariate Normal Diagonal distribution. It also has code_size units and uses a softplus activation function.
+    return tfd.MultivariateNormalDiag(loc, scale)
 
 
 
+def make_prior(code_size):
+    """
+    Define the prior : a multivariate diagonal standard normal distribution
+    """
+    loc = tf.zeros(code_size)
+    scale = tf.ones(code_size)
+    return tfd.MultivariateNormalDiag(loc, scale)
+
+
+def make_decoder(code, data_shape=784):
+    """
+    Define the decoder
+    The decoder is a neural network that takes a sample from the latent space and outputs a probability distribution, the likelihood pθ(x|z) over the data space.
+    """
+    std_dev = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32) # trainable standard deviation as a variable
+
+    x = tf.keras.layers.Dense(256, activation='relu')(code)
+    x = tf.keras.layers.Dense(256, activation='relu')(x)
+    output_mean = tf.keras.layers.Dense(data_shape, activation=None)(x) # no activation function for the likelihood 
+
+    # Reparameterization trick for sampling
+    def sampling(args):
+        mean = args
+        batch = tf.shape(mean)[0]
+        dim = tf.shape(mean)[1]
+        epsilon = tf.random.normal(shape=(batch, dim))
+        return mean + std_dev * epsilon
+
+    decoded = sampling(output_mean)
+
+    decoder = tf.keras.Model(code, decoded)
+    return decoder
+
+ 
+
+""" Plotting the latent vector representation of a few batches of data """
+
+""" Visualisation of some of the reconstructed digits from the latent space """
