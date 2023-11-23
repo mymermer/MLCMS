@@ -1,0 +1,85 @@
+
+# Instantiate encoder, prior, and decoder
+input_data = tf.keras.Input(shape=(784,))
+encoder_loc, encoder_scale = make_encoder(input_data, latent_dim)
+prior_loc, prior_scale = make_prior(latent_dim)
+decoder = make_decoder(tf.keras.Input(shape=(latent_dim,)))
+
+# Define VAE model
+def vae_model(input_data, encoder_loc, encoder_scale, decoder):
+    # Reparameterization trick
+    eps = tf.random.normal(shape=tf.shape(encoder_loc))
+    z = encoder_loc + eps * tf.exp(0.5 * encoder_scale)
+
+    # Reconstruction
+    reconstructed = decoder(z)
+
+    # KL Divergence loss
+    kl_divergence = -0.5 * tf.reduce_sum(1 + encoder_scale - tf.square(encoder_loc) - tf.exp(encoder_scale), axis=1)
+    
+    # Likelihood loss
+    likelihood_loss = tf.reduce_sum(tf.keras.losses.binary_crossentropy(input_data, reconstructed), axis=1)
+
+    # ELBO loss
+    elbo_loss = tf.reduce_mean(kl_divergence + likelihood_loss)
+    return elbo_loss, reconstructed
+
+# Define optimizer
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+
+# Training loop
+epochs = 50
+num_examples_to_generate = 15
+losses = []
+
+for epoch in range(epochs):
+    for i in range(x_train.shape[0] // batch_size):
+        batch = x_train[i * batch_size:(i + 1) * batch_size]
+        with tf.GradientTape() as tape:
+            loss, _ = vae_model(batch, encoder_loc, encoder_scale, decoder)
+        gradients = tape.gradient(loss, decoder.trainable_variables + [encoder_loc, encoder_scale])
+        optimizer.apply_gradients(zip(gradients, decoder.trainable_variables + [encoder_loc, encoder_scale]))
+
+    print(f"Epoch {epoch+1}: Loss: {loss}")
+    losses.append(loss.numpy())
+
+    if epoch == 0 or epoch == 4 or epoch == 24 or epoch == 49 or epoch == epochs - 1:
+        # Perform experiments
+        encoded = encoder_loc.numpy()
+        plt.figure(figsize=(10, 8))
+        plt.scatter(encoded[:, 0], encoded[:, 1], c=y_test, cmap='viridis')
+        plt.colorbar()
+        plt.title('Latent Representation of Test Set')
+        plt.show()
+
+        reconstructed = decoder.predict(encoder_loc[:num_examples_to_generate])
+        plt.figure(figsize=(10, 4))
+        for i in range(num_examples_to_generate):
+            plt.subplot(2, num_examples_to_generate, i + 1)
+            plt.imshow(x_test[i].reshape(28, 28), cmap='gray')
+            plt.axis('off')
+
+            plt.subplot(2, num_examples_to_generate, num_examples_to_generate + i + 1)
+            plt.imshow(reconstructed[i].reshape(28, 28), cmap='gray')
+            plt.axis('off')
+        plt.suptitle('Original and Reconstructed Digits')
+        plt.show()
+
+        random_vector_for_generation = tf.random.normal(shape=[num_examples_to_generate, latent_dim])
+        generated = decoder.predict(random_vector_for_generation)
+        plt.figure(figsize=(10, 4))
+        for i in range(num_examples_to_generate):
+            plt.subplot(2, num_examples_to_generate, i + 1)
+            plt.imshow(generated[i].reshape(28, 28), cmap='gray')
+            plt.axis('off')
+        plt.suptitle('Generated Digits')
+        plt.show()
+
+# Plot loss curve
+plt.plot(losses)
+plt.xlabel('Epochs')
+plt.ylabel('-ELBO Loss')
+plt.title('Loss Curve')
+plt.show()
+
+ 
