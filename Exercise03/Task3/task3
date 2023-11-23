@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflow_probability as tfp
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -44,7 +45,6 @@ latent_dim = 2 # dimension of the latent space, it will be changes for the last 
 batch_size = 128 # batch size for training
 
 
-tfd = tf.contrib.distributions
 
 def make_encoder(data, latent_dim):
     """
@@ -57,7 +57,7 @@ def make_encoder(data, latent_dim):
     x = tf.keras.layers.Dense(256, activation='relu')(x)
     loc = tf.keras.layers.Dense(latent_dim)(x)           # outputs the mean parameters for the Multivariate Normal Diagonal distribution. It has latent_dim units.
     scale = tf.keras.layers.Dense(latent_dim, activation='softplus')(x) # outputs the scale (standard deviation) parameters for the Multivariate Normal Diagonal distribution. It also has latent_dim units and uses a softplus activation function.
-    return tfd.MultivariateNormalDiag(loc, scale) # multivariate diagonal Gaussian distribution as approximate posterior qφ(z|x)
+    return tfp.MultivariateNormalDiag(loc, scale) # multivariate diagonal Gaussian distribution as approximate posterior qφ(z|x)
 
 
 
@@ -67,7 +67,7 @@ def make_prior(latent_dim):
     """
     loc = tf.zeros(latent_dim)
     scale = tf.ones(latent_dim)
-    return tfd.MultivariateNormalDiag(loc, scale)
+    return tfp.MultivariateNormalDiag(loc, scale)
 
 
 def make_decoder(code, data_shape=784):

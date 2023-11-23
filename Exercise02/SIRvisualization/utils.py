@@ -68,4 +68,4 @@ def create_folder_data_scatter(folder):
                            y=group_counts['group-r'],
                            name='removed ' + os.path.basename(folder),
                            mode='lines')
-    return [scatter_s, scatter_i, scatter_r], group_counts
+    return [scatter_s, scatter_i, scatter_r, group_counts]
