@@ -1,8 +1,8 @@
 import tensorflow as tf
 import tensorflow_probability as tfp
-import numpy as npgit 
+import numpy as np 
 import matplotlib.pyplot as plt
-import pandas as pdgit
+import pandas as pd
 
 # Load and preprocess MNIST data
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
@@ -89,12 +89,13 @@ vae.add_loss(vae_loss)
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 vae.compile(optimizer=optimizer)
 
-vae.fit(x_train, x_train, epochs=10, batch_size=batch_size, validation_data=(x_test, x_test))
+vae.fit(x_train, x_train, epochs=1, batch_size=batch_size, validation_data=(x_test, x_test))
 
-"""
-x_test_encoded = encoder.predict(x_test, batch_size=batch_size)
+
+x_test_encoded = encoder.predict(x_test, batch_size=batch_size)[2]
 plt.figure(figsize=(6, 6))
 plt.scatter(x_test_encoded[:, 0], x_test_encoded[:, 1], c=y_test)
 plt.colorbar()
 plt.show()
-"""
+
+
