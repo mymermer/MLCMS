@@ -1,0 +1,100 @@
+import tensorflow as tf
+import tensorflow_probability as tfp
+import numpy as npgit 
+import matplotlib.pyplot as plt
+import pandas as pdgit
+
+# Load and preprocess MNIST data
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+
+# Normalize pixel values between 0 and 1 : xhen normalizing pixel values, the typical range for pixel values in images is between 0 and 255 
+# for grayscale images (0 being black and 255 being white). 
+x_train = x_train.astype('float32') / 255.
+x_test = x_test.astype('float32') / 255.
+
+# Reshape images to a flattened format :  each image is initially represented as a 28x28 array of pixel values (2D array). 
+# To feed this data into a neural network, it needs to be converted into a single vector with 784 (28x28) elements (1D array).
+x_train = x_train.reshape(x_train.shape[0], -1)
+x_test = x_test.reshape(x_test.shape[0], -1)
+
+"""
+# Visualisation of the first six images in x_train
+plt.figure(figsize=(8, 2))
+for i in range(6):
+    plt.subplot(1, 6, i+1)
+    plt.imshow(x_train[i].reshape(28, 28), cmap="gray_r") # resizes the images to 28x28 pixels
+    plt.title('Label = %d' % y_train[i], fontsize=14) # displays the images along with their corresponding labels from y_train
+    plt.axis("off")
+plt.tight_layout()
+plt.show()
+
+
+# Visualisation of the shapes of the training and test data
+print('x_train shape:', x_train.shape)
+print('x_test shape:', x_test.shape)
+print('y_train shape:', y_train.shape)
+print('y_test shape:', y_test.shape)
+
+print(x_train.shape[0], 'train samples')
+print(x_test.shape[0], 'test samples')
+
+"""
+
+
+data_shape = 784 # shape of the data (28x28=784)
+
+latent_dim = 2 # dimension of the latent space, it will be changes for the last question of task 3
+
+batch_size = 128 # batch size for training
+
+#create encoder
+inputs = tf.keras.Input(shape=data_shape)
+x = tf.keras.layers.Dense(256, activation='relu')(inputs)
+x = tf.keras.layers.Dense(256, activation='relu')(x)
+z_mean = tf.keras.layers.Dense(latent_dim)(x)
+z_log_sigma = tf.keras.layers.Dense(latent_dim)(x)
+
+
+def sampling(args, stddev=0.1):
+    z_mean, z_log_sigma = args
+    epsilon = tf.random.normal(shape=(tf.shape(z_mean)[0], latent_dim), mean=0, stddev=stddev)
+    return z_mean + tf.exp(z_log_sigma) * epsilon
+
+z = tf.keras.layers.Lambda(sampling)([z_mean, z_log_sigma]) # ou layers.Lambda(sampling)([z_mean, z_log_sigma]) , output_shape=(latent_dim,)
+
+encoder = tf.keras.Model(inputs, [z_mean, z_log_sigma, z], name='encoder')
+
+#create decoder
+latent_inputs = tf.keras.Input(shape=(latent_dim,), name='z_sampling')
+x = tf.keras.layers.Dense(256, activation='relu')(latent_inputs)
+x = tf.keras.layers.Dense(256, activation='relu')(x)
+outputs = tf.keras.layers.Dense(data_shape, activation='sigmoid')(x)
+decoder = tf.keras.Model(latent_inputs, outputs, name='decoder')
+
+#create VAE
+outputs = decoder(encoder(inputs)[2])
+vae = tf.keras.Model(inputs, outputs, name='vae')
+
+
+#define the loss function
+reconstruction_loss = tf.keras.losses.binary_crossentropy(inputs, outputs)
+reconstruction_loss *= data_shape
+kl_loss = 1 + z_log_sigma - tf.square(z_mean) - tf.exp(z_log_sigma)
+kl_loss = tf.reduce_sum(kl_loss, axis=-1)
+kl_loss *= -0.5
+vae_loss = tf.reduce_mean(reconstruction_loss + kl_loss)
+vae.add_loss(vae_loss)
+
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+vae.compile(optimizer=optimizer)
+
+vae.fit(x_train, x_train, epochs=10, batch_size=batch_size, validation_data=(x_test, x_test))
+
+"""
+x_test_encoded = encoder.predict(x_test, batch_size=batch_size)
+plt.figure(figsize=(6, 6))
+plt.scatter(x_test_encoded[:, 0], x_test_encoded[:, 1], c=y_test)
+plt.colorbar()
+plt.show()
+"""
