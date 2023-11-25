@@ -78,9 +78,9 @@ x = tf.keras.layers.Dense(256, activation='relu')(x)
 
 # Output only the mean of likelihood pθ(x|z)
 outputs = tf.keras.layers.Dense(data_shape, activation='sigmoid')(x) #
-
 # Implement standard deviation as a trainable variable of the model
-decoder_stddev = tf.Variable(tf.ones(data_shape), dtype=tf.float32, name='decoder_stddev') #or decoder_stddev = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name='decoder_stddev') to have a one floating point ??
+outputs_stddev = tf.Variable(tf.ones(data_shape), dtype=tf.float32, name='decoder_stddev') #or decoder_stddev = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name='decoder_stddev') to have a one floating point ??
+
 decoder = tf.keras.Model(latent_inputs, outputs, name='decoder')
 
 #create VAE
@@ -102,75 +102,70 @@ optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 vae.compile(optimizer=optimizer)
 
 
-# Q3 : Train the VAE and collect loss values
-history = vae.fit(x_train, x_train, epochs=50, batch_size=batch_size, validation_data=(x_test, x_test))
+# Q3 : Train the VAE and collect loss values at specific epochs
+
+epochs_list = [1, 5, 25, 50]  # Epochs for experiments
+epochs_to_save = set(epochs_list)
+epochs_to_save.add(0)  # Save state after the 1st epoch
+
+for epoch in range(1, 71): #run training for 70 epochs
+    history = vae.fit(x_train, x_train, epochs=1, batch_size=batch_size, validation_data=(x_test, x_test), verbose=0)
+
+    if epoch in epochs_to_save or np.all(vae.predict(x_test[:10]) == vae.predict(x_test[10:20])): #second condtion is True when convergence is reached 
+
+        # Plotting the latent vector representation of a few batches of data : encode the test set and mark the different classes 
+        x_test_encoded = encoder.predict(x_test, batch_size=batch_size)[2]
+        plt.figure(figsize=(6, 6))
+        plt.scatter(x_test_encoded[:, 0], x_test_encoded[:, 1], c=y_test)
+        plt.colorbar()
+        plt.title(f"Epoch {epoch} - Latent Vector Representation")
+        plt.show()
+
+        # Plotting some of the reconstructed digits from the latent space (15) and the corresponding original ones 
+        reconstructed_images = vae.predict(x_test[:15]) # Generate 15 reconstructed images
+        plt.figure(figsize=(10, 4))
+
+        for i in range(15):
+            # Original images
+            ax = plt.subplot(2, 15, i + 1)
+            plt.imshow(x_test[i].reshape(28, 28))
+            plt.gray()
+            ax.get_xaxis().set_visible(False)
+            ax.get_yaxis().set_visible(False)
+
+            # Reconstructed images
+            ax = plt.subplot(2, 15, i + 16)
+            plt.imshow(reconstructed_images[i].reshape(28, 28))
+            plt.gray()
+            ax.get_xaxis().set_visible(False)
+            ax.get_yaxis().set_visible(False)
+        plt.suptitle(f"Epoch {epoch} - Original and Reconstructed Digits")
+        plt.show()
 
 
+        # Plotting some of the generated digits (15) 
+
+        random_samples = np.random.normal(size=(15, latent_dim)) # Generate 15 samples from the prior distribution
+        generated_images = decoder.predict(random_samples) 
+        plt.figure(figsize=(10, 4))
+        for i in range(15):
+            ax = plt.subplot(3, 5, i + 1)
+            plt.imshow(generated_images[i].reshape(28, 28))
+            plt.gray()
+            ax.get_xaxis().set_visible(False)
+            ax.get_yaxis().set_visible(False)
+        plt.suptitle(f"Epoch {epoch} - Generated Digits")
+        plt.show()
 
 
-""" Plotting the latent vector representation of a few batches of data : encode the test set and mark the different classes """
-
-x_test_encoded = encoder.predict(x_test, batch_size=batch_size)[2]
-plt.figure(figsize=(6, 6))
-plt.scatter(x_test_encoded[:, 0], x_test_encoded[:, 1], c=y_test)
-plt.colorbar()
-plt.show()
+if epoch == 50 or np.all(vae.predict(x_test[:10]) == vae.predict(x_test[10:20])):
+        break  # Break if convergence is detected before 50 epochs
 
 
-
-""" Plotting some of the reconstructed digits from the latent space (15) and the corresponding original ones """
-
-# Generate reconstructed images
-reconstructed_images = vae.predict(x_test)
-
-# Plot original and reconstructed images
-n = 15  # Number of digits to display
-plt.figure(figsize=(10, 4))
-
-for i in range(n):
-    # Original images
-    ax = plt.subplot(2, n, i + 1)
-    plt.imshow(x_test[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-
-    # Reconstructed images
-    ax = plt.subplot(2, n, i + 1 + n)
-    plt.imshow(reconstructed_images[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-
-plt.show()
-
-
-
-
-""" Plotting some of the generated digits (15) """
-
-# Generate samples from the prior distribution
-random_samples = np.random.normal(size=(15, latent_dim))
-
-# Decode random samples
-generated_images = decoder.predict(random_samples)
-
-# Plot generated images
-plt.figure(figsize=(10, 4))
-
-for i in range(15):
-    ax = plt.subplot(3, 5, i + 1)
-    plt.imshow(generated_images[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-
-plt.show()
-
-
-""" Q4 : Plotting the loss curve (test set), i.e., epoch vs. −LELBO"""
+# Q4 : Plotting the loss curve (test set), i.e., epoch vs. −LELBO
 
 # Extract loss values
+history = vae.fit(x_train, x_train, epochs=60, batch_size=batch_size, validation_data=(x_test, x_test), verbose=0)
 train_loss = history.history['loss']
 val_loss = history.history['val_loss']
 
