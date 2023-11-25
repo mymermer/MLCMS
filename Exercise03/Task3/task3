@@ -44,7 +44,7 @@ print(x_test.shape[0], 'test samples')
 
 data_shape = 784 # shape of the data (28x28=784)
 
-latent_dim = 2 # dimension of the latent space, it will be changes for the last question of task 3
+latent_dim = 2 # dimension of the latent space : to be changed for the last question of task 3
 
 batch_size = 128 # batch size for training
 
@@ -55,15 +55,19 @@ x = tf.keras.layers.Dense(256, activation='relu')(x)
 
 # Mean and standard deviation outputs for the approximate posterior qφ(z|x)
 z_mean = tf.keras.layers.Dense(latent_dim)(x)
-z_log_var = tf.keras.layers.Dense(latent_dim)(x)
+z_log_var = tf.keras.layers.Dense(latent_dim)(x) # or tf.keras.layers.Activation('softplus')(z_log_var) -> positivity insurance
 
-# Reparameterization trick for sampling from the distribution
+
 def sampling(args):
+    """
+    Sampling from the latent multivariate diagonal standard normal distribution as prior p(z).
+    Uses (z_mean, z_log_var) to sample z, the vector encoding a digit.
+    """
     z_mean, z_log_var = args
-    epsilon = tf.keras.backend.random_normal(shape=(tf.shape(z_mean)[0], latent_dim)) #tf.random.normal(shape=(tf.shape(z_mean)[0], latent_dim), mean=0, stddev=stddev)
+    epsilon = tf.keras.backend.random_normal(shape=(tf.shape(z_mean)[0], latent_dim)) #shape=(batch_size, latent_dim)=z_mean.shape
     return z_mean + tf.exp(0.5*z_log_var) * epsilon
 
-z = tf.keras.layers.Lambda(sampling)([z_mean, z_log_var]) # ou layers.Lambda(sampling)([z_mean, z_log_var]) , output_shape=(latent_dim,)
+z = tf.keras.layers.Lambda(sampling)([z_mean, z_log_var]) # or layers.Lambda(sampling)([z_mean, z_log_var]) , output_shape=(latent_dim,)
 
 encoder = tf.keras.Model(inputs, [z_mean, z_log_var, z], name='encoder')
 
@@ -72,11 +76,11 @@ latent_inputs = tf.keras.Input(shape=(latent_dim,), name='z_sampling')
 x = tf.keras.layers.Dense(256, activation='relu')(latent_inputs)
 x = tf.keras.layers.Dense(256, activation='relu')(x)
 
-# Output only the mean of pθ(x|z)
-outputs = tf.keras.layers.Dense(data_shape, activation='sigmoid')(x)
+# Output only the mean of likelihood pθ(x|z)
+outputs = tf.keras.layers.Dense(data_shape, activation='sigmoid')(x) #
 
 # Implement standard deviation as a trainable variable of the model
-decoder_stddev = tf.Variable(tf.ones(data_shape), dtype=tf.float32, name='decoder_stddev')
+decoder_stddev = tf.Variable(tf.ones(data_shape), dtype=tf.float32, name='decoder_stddev') #or decoder_stddev = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name='decoder_stddev') to have a one floating point ??
 decoder = tf.keras.Model(latent_inputs, outputs, name='decoder')
 
 #create VAE
@@ -98,27 +102,8 @@ optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 vae.compile(optimizer=optimizer)
 
 
-# Train the VAE and collect loss values
-history = vae.fit(x_train, x_train, epochs=25, batch_size=batch_size, validation_data=(x_test, x_test))
-
-
-
-
-""" Plotting the loss curve (test set), i.e., epoch vs. −LELBO"""
-
-# Extract loss values
-train_loss = history.history['loss']
-val_loss = history.history['val_loss']
-
-# Plot loss curve
-epochs = range(1, len(train_loss) + 1)
-plt.plot(epochs, train_loss, label='Training Loss')
-plt.plot(epochs, val_loss, label='Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('-ELBO')
-plt.title('Negative Evidence Lower Bound (ELBO)')
-plt.legend()
-plt.show()
+# Q3 : Train the VAE and collect loss values
+history = vae.fit(x_train, x_train, epochs=50, batch_size=batch_size, validation_data=(x_test, x_test))
 
 
 
@@ -133,7 +118,7 @@ plt.show()
 
 
 
-""" Visualisation of some of the reconstructed digits from the latent space (15) and the corresponding original ones """
+""" Plotting some of the reconstructed digits from the latent space (15) and the corresponding original ones """
 
 # Generate reconstructed images
 reconstructed_images = vae.predict(x_test)
@@ -162,7 +147,7 @@ plt.show()
 
 
 
-""" Visualisation of some of the generated digits (15) """
+""" Plotting some of the generated digits (15) """
 
 # Generate samples from the prior distribution
 random_samples = np.random.normal(size=(15, latent_dim))
@@ -183,3 +168,18 @@ for i in range(15):
 plt.show()
 
 
+""" Q4 : Plotting the loss curve (test set), i.e., epoch vs. −LELBO"""
+
+# Extract loss values
+train_loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+# Plot loss curve
+epochs = range(1, len(train_loss) + 1)
+plt.plot(epochs, train_loss, label='Training Loss')
+plt.plot(epochs, val_loss, label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('-LELBO')
+plt.title('Loss Curve')
+plt.legend()
+plt.show()
