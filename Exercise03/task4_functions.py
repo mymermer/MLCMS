@@ -5,9 +5,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-data_shape = 2 # shape of the data
-latent_dim = 2 # dimension of the latent space : to be changed for the last question of task 3
-batch_size = 64 # batch size for training (?)
 
 # Create VAE
 def VAE(data_shape, latent_dim) : 
@@ -63,4 +60,3 @@ def VAE(data_shape, latent_dim) :
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.005)
     vae.compile(optimizer=optimizer)
     return vae, encoder, decoder
-
