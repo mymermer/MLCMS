@@ -3,6 +3,16 @@ from tensorflow import keras
 from keras import layers
 
 def VAE(data_shape, latent_dim=2):
+    """
+    Variational Autoencoder (VAE) model.
+
+    Args:
+        data_shape (tuple): The shape of the input data.
+        latent_dim (int, optional): The dimension of the latent space. Defaults to 2.
+
+    Returns:
+        tuple: A tuple containing the VAE model, encoder model, and decoder model.
+    """
     # Encoder
     inputs = tf.keras.Input(shape=data_shape)
     x = layers.Dense(64, activation='relu')(inputs)
