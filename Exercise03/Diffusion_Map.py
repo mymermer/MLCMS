@@ -70,7 +70,7 @@ def plot_eigenValues(tk, phi_val, num=5):
         if index>=num:
             break
         ax.scatter(tk, phi_val[:,index],c=tk, cmap='viridis')
-        ax.set_title("EigenValue {}".format(index))
+        ax.set_title("Eigenfunction {}".format(index))
         fig.show()
     
     # Removing extra subplots
