@@ -1,7 +1,7 @@
 # Comments start with a '#' symbol
 # Ignore specific files or directories
 
-#changes you made on Exercise01 folder will not be send to remote repo (GitHub) and left on your computer
+#changes you made on Exercise01 and Exercise02 folder will not be send to remote repo (GitHub) and left on your computer
 Exercise01/  
 Exercise02/
 

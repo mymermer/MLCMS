@@ -5,33 +5,64 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def diffusion_map(data:"np.ndarray",L : int ,epsilon :float =0.05):
-    distances=pdist(data)
+def diffusion_map(data: np.ndarray, L: int, epsilon: float = 0.05):
+    """
+    Perform diffusion mapping on the given data.
+
+    Parameters:
+    - data (np.ndarray): Input data matrix with shape (n_samples, n_features).
+    - L (int): Number of eigenvalues and corresponding eigenvectors to compute.
+    - epsilon (float): Diffusion parameter controlling the scale of the Gaussian kernel. Default is 0.05.
+
+    Returns:
+    - λ (np.ndarray): Array of eigenvalues.
+    - Φ (np.ndarray): Matrix of corresponding eigenvectors.
+
+    Note:
+    - The function computes the diffusion map eigenvalues (λ) and eigenvectors (Φ) using the given data.
+    - The diffusion map captures the intrinsic geometry and structure of the data.
+    """
+
+    # Calculate pairwise distances
+    distances = pdist(data)
     diameter = np.max(distances)
     epsilon = epsilon * diameter
+
+    # Form distance matrix
     distance_matrix_D = squareform(distances)
 
+    # Construct the kernel matrix W
+    kernel_matrix_W = np.exp(-distance_matrix_D**2 / epsilon)
 
-    kernel_matrix_W = np.exp(-distance_matrix_D**2/epsilon)  # kernel matrix W_ij
-    diagonal_normalization_matrix_P = np.diag(np.sum( kernel_matrix_W,axis=1)) # diagonal normalization matrix P_ii
+    # Diagonal normalization matrix P_ii
+    diagonal_normalization_matrix_P = np.diag(np.sum(kernel_matrix_W, axis=1))
 
+    # Normalize W to form the kernel matrix K
+    kernel_matrix_K = np.linalg.inv(diagonal_normalization_matrix_P) @ kernel_matrix_W @ np.linalg.inv(diagonal_normalization_matrix_P)
 
-    kernel_matrix_K=np.linalg.inv(diagonal_normalization_matrix_P) @ kernel_matrix_W @ np.linalg.inv(diagonal_normalization_matrix_P) #Normalize W to form the kernel matrix K
-    diagonal_normalization_matrix_Q = np.diag(np.sum( kernel_matrix_K,axis=1)) #diagonal normalization matrix Q_ii
-    Q_1_2=sqrtm( np.linalg.inv(diagonal_normalization_matrix_Q))
-    symmetric_matrix_T= Q_1_2 @ kernel_matrix_K @ Q_1_2
+    # Diagonal normalization matrix Q_ii
+    diagonal_normalization_matrix_Q = np.diag(np.sum(kernel_matrix_K, axis=1))
 
+    # Form the symmetric matrix T
+    Q_1_2 = sqrtm(np.linalg.inv(diagonal_normalization_matrix_Q))
+    symmetric_matrix_T = Q_1_2 @ kernel_matrix_K @ Q_1_2
 
-    eigenvalues , eigenvectors = np.linalg.eigh(symmetric_matrix_T)
+    # Compute eigenvalues and eigenvectors
+    eigenvalues, eigenvectors = np.linalg.eigh(symmetric_matrix_T)
     sorted_indices = np.argsort(eigenvalues)[::-1]
     eigenvalues = eigenvalues[sorted_indices]
     eigenvectors = eigenvectors[:, sorted_indices]
-    eigenvalues=eigenvalues[: L+1]
-    eigenvectors=eigenvectors[:,:L+1]
-    λ=np.sqrt(eigenvalues **(1/epsilon)) #eigen value
-    Φ=Q_1_2 @ eigenvectors #eigen vector
+
+    # Select the top L eigenvalues and corresponding eigenvectors
+    eigenvalues = eigenvalues[:L+1]
+    eigenvectors = eigenvectors[:, :L+1]
+
+    # Compute the diffusion map components
+    λ = np.sqrt(eigenvalues ** (1/epsilon))
+    Φ = Q_1_2 @ eigenvectors
 
     return λ, Φ
+
 
 def create_dataset_subtask1(n:int=1000):
     tk = 2 * np.pi * np.linspace(0, n, n) / (n + 1)
