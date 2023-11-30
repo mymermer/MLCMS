@@ -58,7 +58,7 @@ def visualize_dataset(xk, tk):
 
     plt.show()
 
-    fig.savefig("images/dataset1.png")
+    fig.savefig("Figures/dataset1.png")
 
 def plot_eigenValues(tk, phi_val, lambda_val, num=5):
     rows = int(np.ceil(num / 3.0))
@@ -79,7 +79,7 @@ def plot_eigenValues(tk, phi_val, lambda_val, num=5):
 
     plt.tight_layout()
 
-    plt.savefig('images/task2.1.png')
+    plt.savefig('Figures/task2.1.png')
 
 
 
