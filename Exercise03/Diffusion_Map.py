@@ -57,12 +57,58 @@ def visualize_dataset(xk, tk):
 
     plt.show()
 
+    fig.savefig("dataset1.png")
+
 def plot_eigenValues(tk, phi_val, lambda_val, num=5):
-    for i in range(num):
-        fig = plt.figure()
-        ax = fig.add_subplot()
-        ax.scatter(tk, phi_val[:,i],c=tk, cmap='viridis')
-        ax.set_title("EigenValue:{:.4f}".format(lambda_val[i]))
+    rows = int(np.ceil(num / 3.0))
+    cols = 3
+    fig, axes = plt.subplots(rows, cols, figsize=(12, 4 * rows))
+    axes = axes.flatten()
+
+    for index, ax in enumerate(axes):
+        if index>=num:
+            break
+        ax.scatter(tk, phi_val[:,index],c=tk, cmap='viridis')
+        ax.set_title("EigenValue:{:.4f}".format(lambda_val[index]))
         fig.show()
+    
+        # Removing extra subplots
+    for ax in axes[num:]:
+        ax.remove()
+
+    plt.tight_layout()
+
+    plt.savefig('task2.1.png')
 
 
+
+def plot_phi_vals(phi_val, L, t, figname):
+    rows = int(np.ceil(L / 3.0))
+    cols = 3
+
+
+    eigenvectors = np.around(phi_val[:, :], decimals=10)
+
+    # first non-constant eigenfunction
+    phi_one = eigenvectors[:, 1]
+
+    fig, axes = plt.subplots(rows, cols, figsize=(10, 10))
+
+    # Flatten the axes array 
+    axes = axes.flatten()
+
+    for index, ax in enumerate(axes):
+        if index>=L:
+            break
+        index_label = index if index == 0 else index + 1
+        phi_index = eigenvectors[:, index_label]
+        ax.scatter(phi_one, phi_index, c=t, cmap="viridis")
+        ax.set_title(rf'$\phi 1$ vs $\phi{index_label}$')
+
+    # Removing extra subplots
+    for ax in axes[L:]:
+        ax.remove()
+
+    plt.tight_layout()
+
+    plt.savefig(figname)
