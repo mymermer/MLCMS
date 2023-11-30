@@ -60,7 +60,7 @@ def visualize_dataset(xk, tk):
 
     fig.savefig("Figures/dataset1.png")
 
-def plot_eigenValues(tk, phi_val, lambda_val, num=5):
+def plot_eigenValues(tk, phi_val, num=5):
     rows = int(np.ceil(num / 3.0))
     cols = 3
     fig, axes = plt.subplots(rows, cols, figsize=(12, 4 * rows))
@@ -70,7 +70,7 @@ def plot_eigenValues(tk, phi_val, lambda_val, num=5):
         if index>=num:
             break
         ax.scatter(tk, phi_val[:,index],c=tk, cmap='viridis')
-        ax.set_title("EigenValue:{:.4f}".format(lambda_val[index]))
+        ax.set_title("EigenValue {}".format(index))
         fig.show()
     
     # Removing extra subplots
