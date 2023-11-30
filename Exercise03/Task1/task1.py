@@ -8,114 +8,114 @@ from skimage.transform import resize
 
 
 
-# ----- 1st Part -----
+# # ----- 1st Part -----
 
-def read_2d_data(file_path):
-    # Reads data from a given file path and returns two lists, x and y
-    x, y = [], []
-    with open(file_path, "r") as file:
-        for line in file:
-            if line.strip():  # Ignore empty lines
-                parts = line.split()  # Splitting by whitespace
-                x.append(float(parts[0]))
-                y.append(float(parts[1]))
-    return x, y
+# def read_2d_data(file_path):
+#     # Reads data from a given file path and returns two lists, x and y
+#     x, y = [], []
+#     with open(file_path, "r") as file:
+#         for line in file:
+#             if line.strip():  # Ignore empty lines
+#                 parts = line.split()  # Splitting by whitespace
+#                 x.append(float(parts[0]))
+#                 y.append(float(parts[1]))
+#     return x, y
 
-def perform_pca(data, components):
-    # Performs PCA on the data and returns the PCA object and transformed data
-    pca = PCA(n_components=components)
-    transformed_data = pca.fit_transform(data)
-    return pca, transformed_data
+# def perform_pca(data, components):
+#     # Performs PCA on the data and returns the PCA object and transformed data
+#     pca = PCA(n_components=components)
+#     transformed_data = pca.fit_transform(data)
+#     return pca, transformed_data
 
-def plot_data_with_pca(x, y, pca, data, output_path):
-    # Plots the original data and PCA components
-    plt.figure(figsize=(8, 6))
-    plt.scatter(x, y, alpha=0.5)
-    plt.title('Dataset and Principal Components')
-    plt.xlabel('x')
-    plt.ylabel('f(x)')
-    plt.grid(True)
+# def plot_data_with_pca(x, y, pca, data, output_path):
+#     # Plots the original data and PCA components
+#     plt.figure(figsize=(8, 6))
+#     plt.scatter(x, y, alpha=0.5)
+#     plt.title('Dataset and Principal Components')
+#     plt.xlabel('x')
+#     plt.ylabel('f(x)')
+#     plt.grid(True)
 
-    origin = np.mean(data, axis=0)  # Origin point for the PCA vectors
-    for length, vector in zip(pca.explained_variance_, pca.components_):
-        v = vector * 3 * np.sqrt(length)
-        plt.quiver(*origin, *v, scale=1, scale_units='xy', angles='xy', color='r')
+#     origin = np.mean(data, axis=0)  # Origin point for the PCA vectors
+#     for length, vector in zip(pca.explained_variance_, pca.components_):
+#         v = vector * 3 * np.sqrt(length)
+#         plt.quiver(*origin, *v, scale=1, scale_units='xy', angles='xy', color='r')
 
-    plt.savefig(output_path, format='png', dpi=300)
-    plt.show()
+#     plt.savefig(output_path, format='png', dpi=300)
+#     plt.show()
 
-def first_task(file_path, output_path):
-    x, y = read_2d_data(file_path)
-    data = np.column_stack((x, y))
-    pca, transformed_data = perform_pca(data, 2)
-    plot_data_with_pca(x, y, pca, data, output_path)
-    variance_explained = pca.explained_variance_ratio_
+# def first_task(file_path, output_path):
+#     x, y = read_2d_data(file_path)
+#     data = np.column_stack((x, y))
+#     pca, transformed_data = perform_pca(data, 2)
+#     plot_data_with_pca(x, y, pca, data, output_path)
+#     variance_explained = pca.explained_variance_ratio_
 
-    return variance_explained, pca, transformed_data
+#     return variance_explained, pca, transformed_data
 
-file_path = "C:/Users/AhnNayeon/Downloads/pca_dataset.txt"
-output_path = "C:/Users/AhnNayeon/Downloads/ex3task1-1.png"
+# file_path = "C:/Users/AhnNayeon/Downloads/pca_dataset.txt"
+# output_path = "C:/Users/AhnNayeon/Downloads/ex3task1-1.png"
 
-energy1, pca, transformed_data = first_task(file_path, output_path)
-overall_energy1 = np.sum(energy1) if energy1 is not None else None
+# energy1, pca, transformed_data = first_task(file_path, output_path)
+# overall_energy1 = np.sum(energy1) if energy1 is not None else None
 
-if energy1 is not None:
-    print(f'For part 1, each component explains {energy1}')
-    print(f'The overall energy would be {overall_energy1}')
+# if energy1 is not None:
+#     print(f'For part 1, each component explains {energy1}')
+#     print(f'The overall energy would be {overall_energy1}')
 
-# ----- 2nd Part -----
+# # ----- 2nd Part -----
 
 
-def get_image():
-    # Gets an image file and converts it to gray
-    image = face(gray=True)
-    image_resized = resize(image, (249, 185))
-    plt.imshow(image_resized, cmap='gray')
-    plt.title('Part 2 Original Image')
-    plt.axis('off')
-    plt.show()
-    return image_resized
+# def get_image():
+#     # Gets an image file and converts it to gray
+#     image = face(gray=True)
+#     image_resized = resize(image, (249, 185))
+#     plt.imshow(image_resized, cmap='gray')
+#     plt.title('Part 2 Original Image')
+#     plt.axis('off')
+#     plt.show()
+#     return image_resized
 
-def apply_pca_and_reconstruct(image, num_components):
-    # Applies PCA to the given image and reconstructs it
-    image_flattened = image.reshape(image.shape[0], -1)
-    pca = PCA(n_components=num_components)
-    transformed = pca.fit_transform(image_flattened)
-    reconstructed = pca.inverse_transform(transformed)
-    reconstructed_image = reconstructed.reshape(image.shape)
-    variance_explained = np.sum(pca.explained_variance_ratio_)
-    return reconstructed_image, variance_explained
+# def apply_pca_and_reconstruct(image, num_components):
+#     # Applies PCA to the given image and reconstructs it
+#     image_flattened = image.reshape(image.shape[0], -1)
+#     pca = PCA(n_components=num_components)
+#     transformed = pca.fit_transform(image_flattened)
+#     reconstructed = pca.inverse_transform(transformed)
+#     reconstructed_image = reconstructed.reshape(image.shape)
+#     variance_explained = np.sum(pca.explained_variance_ratio_)
+#     return reconstructed_image, variance_explained
 
-def second_part(image, output_path):
-    max_components = min(image.shape)
-    components = [max_components, 120, 50, 10]
-    reconstructed_images = []
-    variances_explained = []
+# def second_part(image, output_path):
+#     max_components = min(image.shape)
+#     components = [max_components, 120, 50, 10]
+#     reconstructed_images = []
+#     variances_explained = []
 
-    for n in components:
-        reconstructed_image, variance_explained = apply_pca_and_reconstruct(image, n)
-        reconstructed_images.append(reconstructed_image)
-        variances_explained.append(variance_explained)
+#     for n in components:
+#         reconstructed_image, variance_explained = apply_pca_and_reconstruct(image, n)
+#         reconstructed_images.append(reconstructed_image)
+#         variances_explained.append(variance_explained)
 
-    plt.figure(figsize=(12, 8))
-    plt.subplot(2, 3, 1)
-    plt.imshow(image, cmap='gray')
-    plt.title('Original')
-    plt.axis('off')
+#     plt.figure(figsize=(12, 8))
+#     plt.subplot(2, 3, 1)
+#     plt.imshow(image, cmap='gray')
+#     plt.title('Original')
+#     plt.axis('off')
 
-    for i, img in enumerate(reconstructed_images, 2):
-        plt.subplot(2, 3, i)
-        plt.imshow(img, cmap='gray')
-        plt.title(f'{components[i-2]} Components\nEnergy: {variances_explained[i-2]:.5f}')
-        plt.axis('off')
+#     for i, img in enumerate(reconstructed_images, 2):
+#         plt.subplot(2, 3, i)
+#         plt.imshow(img, cmap='gray')
+#         plt.title(f'{components[i-2]} Components\nEnergy: {variances_explained[i-2]:.5f}')
+#         plt.axis('off')
 
-    plt.tight_layout()
-    plt.savefig(output_path, format='png', dpi=300)  
-    plt.show()
+#     plt.tight_layout()
+#     plt.savefig(output_path, format='png', dpi=300)  
+#     plt.show()
 
-image_resized = get_image()
-output_path = "C:/Users/AhnNayeon/Downloads/ex3task1-2.png" 
-second_part(image_resized, output_path)
+# image_resized = get_image()
+# output_path = "C:/Users/AhnNayeon/Downloads/ex3task1-2.png" 
+# second_part(image_resized, output_path)
 
 
 #-----3rd Part-----
@@ -171,3 +171,61 @@ energy_final = pca_final.explained_variance_ratio_
 overall_energy_final = np.sum(energy_final)
 print(f"For {required_components} components, each component explains: {energy_final}")
 print(f"The overall explained variance is: {overall_energy_final}")
+
+
+#test accuracy for part3
+
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.decomposition import PCA
+
+
+# Function to create sequences for LSTM
+def create_sequences(data, time_steps=1):
+    X, y = [], []
+    for i in range(len(data) - time_steps):
+        X.append(data.iloc[i:(i + time_steps)].values)
+        y.append(data.iloc[i + time_steps].values)
+    return np.array(X), np.array(y)
+
+# Time steps (can be tuned)
+time_steps = 100
+
+# Create sequences from raw data
+X_raw, y_raw = create_sequences(data3, time_steps)
+
+# Split the raw data into training and testing sets
+X_train_raw, X_test_raw, y_train_raw, y_test_raw = train_test_split(X_raw, y_raw, test_size=0.2, random_state=0)
+
+X_pca = pca_final.fit_transform(data3)
+
+# Create sequences from PCA data
+X_pca, y_pca = create_sequences(pd.DataFrame(X_pca), time_steps)
+
+# Split the PCA data into training and testing sets
+X_train_pca, X_test_pca, y_train_pca, y_test_pca = train_test_split(X_pca, y_pca, test_size=0.2, random_state=0)
+
+# Define a function to create and train an LSTM model
+def train_lstm(X_train, y_train, X_test, y_test):
+    model = Sequential()
+    model.add(LSTM(50, activation='relu', input_shape=(X_train.shape[1], X_train.shape[2])))
+    model.add(Dense(y_train.shape[1]))
+    model.compile(optimizer='adam', loss='mean_squared_error')
+
+    # Fit the model
+    model.fit(X_train, y_train, epochs=20, batch_size=32, verbose=0)
+
+    # Predict and calculate MSE
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    return model, mse
+
+# Train on raw data
+model_raw, mse_raw = train_lstm(X_train_raw, y_train_raw, X_test_raw, y_test_raw)
+print(f"MSE for raw data: {mse_raw}")
+
+# Train on PCA data
+model_pca, mse_pca = train_lstm(X_train_pca, y_train_pca, X_test_pca, y_test_pca)
+print(f"MSE for PCA data: {mse_pca}")
