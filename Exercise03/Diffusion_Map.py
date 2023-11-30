@@ -4,6 +4,7 @@ from scipy.linalg import sqrtm, eigh
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+
 def diffusion_map(data:"np.ndarray",L : int ,epsilon :float =0.05):
     distances=pdist(data)
     diameter = np.max(distances)
@@ -57,7 +58,7 @@ def visualize_dataset(xk, tk):
 
     plt.show()
 
-    fig.savefig("dataset1.png")
+    fig.savefig("images/dataset1.png")
 
 def plot_eigenValues(tk, phi_val, lambda_val, num=5):
     rows = int(np.ceil(num / 3.0))
@@ -72,13 +73,13 @@ def plot_eigenValues(tk, phi_val, lambda_val, num=5):
         ax.set_title("EigenValue:{:.4f}".format(lambda_val[index]))
         fig.show()
     
-        # Removing extra subplots
+    # Removing extra subplots
     for ax in axes[num:]:
         ax.remove()
 
     plt.tight_layout()
 
-    plt.savefig('task2.1.png')
+    plt.savefig('images/task2.1.png')
 
 
 
