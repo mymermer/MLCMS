@@ -64,12 +64,33 @@ def diffusion_map(data: np.ndarray, L: int, epsilon: float = 0.05):
     return λ, Φ
 
 
+
 def create_dataset_subtask1(n:int=1000):
+    """
+    Generating the dataset for subtask 1
+
+    Parameters:
+    - n (int): Number of samples to be generated.
+
+    Returns:
+    - xk (np.ndarray): Array of shape (n, 2) containing the generated samples.
+    - tk (np.ndarray): Array of shape (n, ) containing the corresponding angles.
+
+    """
+    # Generating an array of n values evenly spaced between 0 and n and
     tk = 2 * np.pi * np.linspace(0, n, n) / (n + 1)
     xk = np.vstack((np.cos(tk), np.sin(tk))).T
     return xk, tk
 
 def visualize_dataset(xk, tk):
+    """
+    Visualizing the dataset
+    
+    Parameters:
+    - xk (np.ndarray): Array of shape (n, 2) containing the generated samples.
+    - tk (np.ndarray): Array of shape (n, ) containing the corresponding angles.
+
+    """
     fig = plt.figure(figsize=(12, 6))
 
     #2D Visualization
@@ -92,6 +113,15 @@ def visualize_dataset(xk, tk):
     fig.savefig("Figures/dataset1.png")
 
 def plot_eigenValues(tk, phi_val, num=5):
+    """
+    
+    Parameters:
+    - tk (np.ndarray): Array of shape (n, ) containing the corresponding angles.
+    - phi_val (np.ndarray): Array of shape (n, L) containing the corresponding eigenvalues.
+    - num (int): Number of eigenvalues to be plotted. Default is 5.
+    - n (int): Number of data points
+
+    """
     rows = int(np.ceil(num / 3.0))
     cols = 3
     fig, axes = plt.subplots(rows, cols, figsize=(12, 4 * rows))
@@ -115,9 +145,18 @@ def plot_eigenValues(tk, phi_val, num=5):
 
 
 def plot_phi_vals(phi_val, L, t, figname):
+    """
+    Plotting the eigenfunctions
+    
+    Parameters:
+    - phi_val (np.ndarray): Array of shape (n, L) containing the corresponding eigenvalues.
+    - L (int): Number of eigenvalues and corresponding eigenvectors to compute.
+    - t (np.ndarray): Array of shape (n, ) containing the unrolled positions of the points along the main axis of the Swiss roll.
+    - figname (str): Name of the figure to be saved.
+    
+    """
     rows = int(np.ceil(L / 3.0))
     cols = 3
-
 
     eigenvectors = np.around(phi_val[:, :], decimals=10)
 
