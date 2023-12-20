@@ -1,4 +1,4 @@
-
+import numpy as np
 def mu(b, I, mu0, mu1):
     """Recovery rate.
     
@@ -54,3 +54,39 @@ def model(t, y, mu0, mu1, beta, A, d, nu, b):
     dRdt = m*I-d*R
     
     return [dSdt, dIdt, dRdt]
+
+
+def model_with_backward_bifurcation(t, y, mu0, mu1, beta, A, d, nu, b, epsilon):
+    """
+    SIR model with backward bifurcation including hospitalization and natural death.
+
+    Parameters:
+    -----------
+    mu0
+        Minimum recovery rate
+    mu1
+        Maximum recovery rate
+    beta
+        average number of adequate contacts per unit time with infectious individuals
+    A
+        recruitment rate of susceptibles (e.g. birth rate)
+    d
+        natural death rate
+    nu
+        disease-induced death rate
+    b
+        hospital beds per 10,000 persons
+    epsilon
+        small positive parameter for backward bifurcation
+    """
+    S, I, R = y[:]
+    m = mu(b, I, mu0, mu1)
+
+    dSdt = A - d * S - (beta * S * I) / (S + I + R)  # Births - Natural deaths - Transmission
+    dIdt = (beta * S * I) / (S + I + R) - (
+                d + nu) * I - m * I + epsilon * I ** 2  # Transmission - Deaths - Recovery + Backward bifurcation term
+    dRdt = m * I - d * R  # Recovery - Natural deaths
+
+    return [dSdt, dIdt, dRdt]
+
+
