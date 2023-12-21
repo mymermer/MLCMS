@@ -1,0 +1,76 @@
+\documentclass[10pt,a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MODIFY:
+
+\newcommand{\authorA}{Firstname Lastname (1234567890)}
+\newcommand{\authorB}{Firstname Lastname (1234567891)}
+\newcommand{\authorC}{Firstname Lastname (1234567892)}
+\newcommand{\authorD}{Firstname Lastname (1234567892)}
+\newcommand{\authorE}{Firstname Lastname (1234567892)}
+\newcommand{\teamlead}{~\textbf{Project lead}}
+\newcommand{\groupNumber}{123} % - YOUR GROUP NUMBER
+\newcommand{\exerciseNumber}{1} % - THE NUMBER OF THE EXERCISE
+\newcommand{\sourceCodeLink}{https://www.github.com/link/to/our/github/project}
+
+\newcommand{\workPerAuthor}{
+\authorA&Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      \hline
+\authorB\teamlead&Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      \hline
+\authorC&Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      \hline
+\authorD&Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      \hline
+\authorE&Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./imports.tex}
+
+\begin{document}
+
+\frontpage
+
+\begin{task}{1, Setting up the modeling environment}
+We successfully set up the modeling environment, using Python.
+\end{task}
+
+\begin{task}{2, First step of a single pedestrian}
+They stepped successfully (see figure).
+\end{task}
+
+\begin{task}{3, Interaction of pedestrians}
+- not done -
+\end{task}
+\begin{task}{4, Obstacle avoidance}
+Pedestrians can avoid obstacles, using Dijkstras algorithm. See figure.
+\end{task}
+\begin{task}{5, Tests}
+\begin{enumerate}
+\item[TEST1:] RiMEA scenario 1 (straight line, ignore premovement time)\\
+- not done, but citing RiMEA guidelines~\cite{rimea-2009} -
+\item[TEST2:] RiMEA scenario 4 (fundamental diagram, be careful with periodic boundary conditions).\\
+- test successful - 
+\item[TEST3:] RiMEA scenario 6 (movement around a corner).\\
+- test successful - 
+\item[TEST4:] RiMEA scenario\\
+- test successful - 
+\end{enumerate}
+\end{task}
+
+\bibliographystyle{plain}
+\bibliography{Literature}
+
+\end{document}
