@@ -76,7 +76,7 @@ def plot_bifurcation_diagram(x_value, r_values, time_steps):
     plt.ylabel('x (steady state)')
     plt.show()
 
-def lorenz_system(state, sigma, rho, beta):
+def lorenz_system(t, state, sigma, rho, beta):
     """
     Define the Lorenz system
     Parameters:
