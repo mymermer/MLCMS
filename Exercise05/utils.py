@@ -23,7 +23,7 @@ def estimate_vector(x_0,x_1,delta_t):
 def linear_system( t, x, A):
     return A @ x
 
-def generate(x_0, t_end, A):
+def generate_trajectories(x_0, t_end, A):
     t = np.linspace(0, t_end, 100)
     solution = np.zeros_like(x_0)
     for i in range(len(x_0)):
