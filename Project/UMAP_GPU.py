@@ -1,25 +1,37 @@
-#UMAP with GPU acceleration
-#Follow the link for setting up cudf and cuml libraries with wsl2:  https://docs.rapids.ai/install#wsl2-pip
+import cupy as cp
+from cuml.manifold import UMAP
+import matplotlib.pyplot as plt
+import gc
+import random
 
-def umap_visualization(model, subset_size=20000, n_neighbors=15, n_components=2):
-    import cudf
-    from cuml.manifold import UMAP
-    import matplotlib.pyplot as plt
-    import random
+def umap_visualization(model, subset_size=None, n_neighbors=15, n_components=2):
+    # Get all words from the vocabulary
+    all_words = list(model.key_to_index.keys())
 
-    # Get a random subset of words from the vocabulary
-    subset_words = random.sample(list(model.key_to_index.keys()), subset_size)
+    # If a subset size is specified, randomly sample the words
+    if subset_size is not None:
+        all_words = random.sample(all_words, subset_size)
 
-    # Get the word vectors for the subset and convert it to a cuDF DataFrame
-    subset_word_vectors = cudf.DataFrame([model[word] for word in subset_words])
+    # Create a generator that yields word vectors one at a time
+    def word_vector_generator():
+        for word in all_words:
+            yield model[word]
 
-    # Apply UMAP on the subset
+    word_vectors = word_vector_generator()
+
+    # Apply UMAP on all words
     umap = UMAP(n_neighbors=n_neighbors, n_components=n_components)
-    transformed_vectors = umap.fit_transform(subset_word_vectors)
+    transformed_vectors = umap.fit_transform(cp.array(list(word_vectors), dtype=cp.float32))
+
+    # Convert the transformed vectors to numpy arrays for plotting
+    transformed_vectors = cp.asnumpy(transformed_vectors)
+
+    # Free up memory
+    gc.collect()
 
     # Create a scatter plot with small dots
     plt.figure(figsize=(10, 8))
-    plt.scatter(transformed_vectors[0].to_pandas().values, transformed_vectors[1].to_pandas().values, marker='.', s=1)
+    plt.scatter(transformed_vectors[:, 0], transformed_vectors[:, 1], marker='.', s=1)
 
     plt.title("UMAP Visualization")
     plt.xlabel("Embedding Dimension 1")
