@@ -1,32 +1,76 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from datafold.pcfold import PCManifold
+import numpy as np
+from sklearn.datasets import make_s_curve
+
+import datafold.dynfold as dfold
+import datafold.pcfold as pfold
+from datafold.dynfold import LocalRegressionSelection
 import random
 
-def pca_visualization(model, subset_size=None, n_components=2):
+
+
+def dmap_visualization(word2vec_model, n_samples=15000):
     # Get all words from the vocabulary
-    all_words = list(model.key_to_index.keys())
+    all_words = list(word2vec_model.key_to_index.keys())
 
-    # If a subset size is specified, randomly sample the words
-    if subset_size is not None:
-        all_words = random.sample(all_words, subset_size)
+    # Randomly sample the words
+    all_words = random.sample(all_words, n_samples)
 
-    # Create a numpy array of word vectors
-    word_vectors = np.array([model[word] for word in all_words])
+    # Get the vectors from the Word2Vec model
+    X = np.array([word2vec_model[word] for word in all_words])
+    X_color = np.arange(n_samples)
 
-    # Create a PCManifold object and optimize parameters
-    pcm = PCManifold(word_vectors)
-    pcm.optimize_parameters(result_scaling=2)
+    # Optimize the parameters of the point cloud manifold
+    X_pcm = pfold.PCManifold(X)
+    X_pcm.optimize_parameters()
 
-    # Apply PCA on the data
-    pca = PCA(n_components=n_components)
-    transformed_vectors = pca.fit_transform(word_vectors)
+    # Compute the diffusion maps
+    dmap = dfold.DiffusionMaps(
+        kernel=pfold.GaussianKernel(epsilon=X_pcm.kernel.epsilon, distance=dict(cut_off=X_pcm.cut_off)),
+        n_eigenpairs=9,
+    ).fit(X_pcm)
 
-    # Plot the result
-    plt.figure(figsize=(10, 8))
-    plt.scatter(transformed_vectors[:, 0], transformed_vectors[:, 1], marker='.', s=1)
-    plt.title("PCA Visualization")
-    plt.xlabel("Principal Component 1")
-    plt.ylabel("Principal Component 2")
+    # Select the parsimonious eigenvectors
+    selection = LocalRegressionSelection(intrinsic_dim=2, n_subsample=500, strategy="dim").fit(dmap.eigenvectors_)
+
+    # Transform the eigenvectors to the target mapping
+    target_mapping = selection.transform(dmap.eigenvectors_)
+
+    # Plot the target mapping
+    f, ax = plt.subplots(figsize=(15, 9))
+    ax.scatter(target_mapping[:, 0], target_mapping[:, 1], c=X_color, cmap=plt.cm.Spectral)
+    ax.set_xlabel("Embedding Dimension 1")
+    ax.set_ylabel("Embedding Dimension 2")
+    ax.set_title("Diffusion Map Visualization of Word2Vec Vectors")
+    plt.show()
+
+
+
+
+
+
+
+def dmap_visualization_s_curve(n_samples=15000):
+    rng = np.random.default_rng(1)
+    X, X_color = make_s_curve(n_samples, random_state=3, noise=0)
+    idx_plot = rng.choice(n_samples, size=1000, replace=False)
+
+    X_pcm = pfold.PCManifold(X)
+    X_pcm.optimize_parameters()
+
+    dmap = dfold.DiffusionMaps(
+        kernel=pfold.GaussianKernel(epsilon=X_pcm.kernel.epsilon, distance=dict(cut_off=X_pcm.cut_off)),
+        n_eigenpairs=9,
+    ).fit(X_pcm)
+
+    selection = LocalRegressionSelection(intrinsic_dim=2, n_subsample=500, strategy="dim").fit(dmap.eigenvectors_)
+
+    target_mapping = selection.transform(dmap.eigenvectors_)
+
+    # Plot the target mapping
+    f, ax = plt.subplots(figsize=(15, 9))
+    ax.scatter(target_mapping[idx_plot, 0], target_mapping[idx_plot, 1], c=X_color[idx_plot], cmap=plt.cm.Spectral)
+    ax.set_xlabel("Embedding Dimension 1")
+    ax.set_ylabel("Embedding Dimension 2")
+    ax.set_title("Diffusion Map Visualization of S-Curve")
     plt.show()
