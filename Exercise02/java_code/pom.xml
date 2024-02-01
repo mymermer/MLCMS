@@ -217,11 +217,11 @@
             <version>0.10</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.json/json -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20230227</version>
-        </dependency>
+         <dependency>
+           <groupId>org.json</groupId>
+           <artifactId>json</artifactId>
+           <version>[20231013,)</version>
+         </dependency>
         <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
         <dependency>
             <groupId>org.reflections</groupId>
