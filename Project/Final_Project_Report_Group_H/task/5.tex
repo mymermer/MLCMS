@@ -1,0 +1,15 @@
+We started with the review of the megaman paper, but since it was not possible to install the library anymore, we explored various other available options in an effort to find an alternative. We tried different libraries and algorithms, focusing on their efficacy, computational efficiency, and scalability across two different datasets. Although we were unable to get good results on the Word2Vec dataset, we got pretty good results on the synthetic Swiss Roll dataset.\\
+
+The Datafold library emerged as one of the most robust contenders with its diffusion maps algorithm. Its simple implementation and various utilities saved us a ton of time in tuning the parameters. While the original implementation of Diffusion Maps showcased commendable performance, it still has its limitations in handling very large datasets. Fortunately, datafold also had an alternative solution - the Roseland Model. This alternative significantly accelerated the embedding generation process while being computationally less resource intensive which allows us to run the model on not so powerful computers.\\
+
+We were also able to show the efficacy of Autoencoders in dimensionality reduction. They provided us with a faster implementation with a comparable trustworthiness metric. While the libraries like sklearn and UMAP failed on 1M points, the autoencoders were able to learn latent representations.\\
+
+In conclusion, our exploration illustrated the diverse landscape of dimensionality reduction techniques, showcasing the strengths and limitations of various libraries and algorithms. \\
+
+There are still several options to improve these findings in future research. The first step is to get to know the dataset better and experiment with additional preprocessing. For the autoencoder, the model parameters can be fine-tuned using grid search or random search to achieve better results. Datafold struggled with a trade-off between speed and accuracy. In this aspect, a certain threshold could be determined depending on what the user deems more important. 
+
+% Further investigation into the specific characteristics of the dataset, experimentation with different preprocessing techniques, and fine-tuning of  model parameters may be necessary to improve the performance on this challenging real-world dataset.
+
+% This trade-off between speed and accuracy is a crucial aspect to consider in the context of large-scale, real-world applications.
+
+ % Several factors might be responsible for this outcome. First, there could be some issues with the preprocessing of the dataset, and it might need some refinement to improve the algorithm's performance on this specific dataset.

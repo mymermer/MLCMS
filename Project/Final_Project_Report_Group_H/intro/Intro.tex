@@ -1,0 +1,82 @@
+%--- Introduction ---%
+
+%dimensionality reduction%
+The primary objective of \textbf{dimensionality reduction} is to transform high-dimensional datasets, originally characterized by numerous variables, into a concise representation using a minimal set of parameters. This tool plays a crucial role across various disciplines, including information theory (linked to compression and coding), statistics (involving latent variables), as well as machine learning and sampling theory. 
+
+Formally, let's assume we have a data matrix $X \in{\R^{N \times n}}$ with N data points in n-dimensional space.
+The goal is then to obtain a new representation of the data, as another coordinate matrix $U \in \R^{N \times p}$, ideally with $p<<n$.
+(One can note that for visualization p = 2,3 is necessary.) \\
+
+%Manifold learning%
+\textbf{Manifold learning} techniques aim specifically to capture the intrinsic, lower-dimensional representations of the data, enabling more effective visualization, analysis, and modeling. The quest for meaningful structures in datasets involves extracting relevant features to enhance insight and understanding of the underlying phenomena. The new representation then aims to faithfully describe the data by preserving key quantities, such as local mutual distances. 
+If these methods are particularly useful, it is partly because oftentimes, it is reasonable to assume that high dimensional real-life data lies on a lower-dimensional \textbf{manifold} \footnote{A topological space $M$ is a topological manifold of dimension $d$ if $M$ is locally Euclidean: each point of M has a neighborhood that is homeomorphic to an open subset of $\R^d$. [Lee, 2012]}. \\
+
+\textbf{Diffusion Maps} was first introduced by R.R. Coifman and S. Lafon \cite{COIFMAN20065} as a non-linear dimensionality reduction algorithm. Since then, the tool has gained a lot of popularity over the years. Often called "Laplacian eigenmaps", it's used to identify significant variables that live in a lower dimensional space while preserving the local proximity between data points. 
+Even though dimensionality reduction algorithms include PCA (Principle Component Analysis), Isomap, LLE (Locally Linear Embedding), and t-SNE (t-Distributed Stochastic Neighbor Embedding), for the purpose of our review, we will focus our interest in this paper on Diffusion Maps. \\
+ 
+Having covered some essential aspects of dimensionality reduction, let's return to the mathematical formalism introduced earlier to clarify the Diffusion Maps method. Familiarity with the related concepts and algorithmic steps will be beneficial for the upcoming discussions. \\
+
+Given a dataset $X$ with \(N\) data points \(x_1, x_2, \ldots, x_N\) in a high-dimensional space $\R^n$, 
+%kernel, affinity matrix and similarity%
+we want to know how similar two data points are. This can be measured by the \textbf{kernel function} $k: X \times X \rightarrow \R$, which has the properties of being positive and symmetric.\footnote{ The Gaussian kernel is particularly popular and used. It's defined as \begin{math} k(x,y)=\exp{\frac{||x-y||^2}{\epsilon}} \end{math}} %choice of epsilon!% 
+From $(X,k)$, the \textbf{affinity matrix} $W=(w_{i,j})_{(i,j)\in[1;N]^2}=(k(x_i,x_j))_{(i,j)\in[1;N]^2}$ reflects the pairwise \textbf{similarities} between the data points. 
+
+%transition probability matrix and connectivity%
+By normalizing each similarity measure $w_{i,j}$ with $d_i=\sum_{i\in X} w_{i,j}$, we obtain the \textbf{connectivity} $p_{i,j}=\frac{w_{i,j}}{d_i}$ between two data points. This quantity $p_{i,j}$ can be interpreted as the probability of moving from $x_i$ to $x_j$. Unlike the similarity, it is not symmetric, yet, it has the particular characteristic that every row of $P=D^{-1}W$, where $D$ is the diagonal matrix with its elements being $(d_i)_{i\in X}$, sums to 1. % Indeed, the probabilities of moving from a certain $x_j$ to another $x_i$ adds up to 1.%
+
+%transition Matrix%
+According to the aforementioned properties, P, constructed from p(x,y), constitutes a \textbf{transition probability matrix} of a Markov chain on $X$. And, if $(P)_{i,j}=p(x_i,x_j)$ denotes the transition probability from $x_i$ to $x_j$ in one time step $\Delta t$, $P^{t}$ gives the t-step transition matrix. %explain that?, at least make the change in writing clear%
+
+%symmetric matrix similar to P OR NOT %
+%As a real symmetric matrix, $S$ is diagonalizable and its eigendecomposition is given by:
+%\begin{math}S=V \Lambda V^{-1}\end{math},
+%where V is the matrix whose columns are the eigenvectors of P, and $\Lambda$ is the diagonal matrix containing the eigenvalues of P.%
+
+%eigen decomposition%
+%matrix form%
+We can show by introducing a symmetric matrix similar to $P^t$ for example that $P^{t}=\Phi \Lambda^t \Psi$, where $\Lambda^t$ is the diagonal matrix containing the N eigenvalues $\lambda_0=1, \lambda_1, \lambda_2, ...., \lambda_{N-1}$ of $P^{t}$.
+%scalar form%
+Therefore, $P_{i,j}^{t} = \sum_{l} \lambda_{l}^{t} \psi_{l}(x_{i}) \phi_{l}(x_{j})$
+%diffusion maps%
+The diffusion map maps points from the original space to the eigenvectors of $P$ : \( X \mapsto \mathbb{R}^{n^{-1}} \), and is defined as
+
+\[
+\Psi_{t}(x) = (\lambda_{1}^{t}\psi_{1}(x), \lambda_{2}^{t}\psi_{2}(x), \ldots, \lambda_{n-1}^{t}\psi_{n-1}(x))
+\]
+Now, the eigenvalues of P all lie between 0 and 1. As time progresses and t increases, the small and intermediate eigenvalues (the ones not close to 1) quickly decay.It is then sufficient to use only the first \( k \) eigenvectors and eigenvalues. Thus, we get the diffusion map from the original data to a \( k \)-dimensional space which is embedded in the original space.
+
+%connection between diffusion maps and diffusion distances
+%
+Also, it is proved that the Euclidean distance between points in the embedded space is equal to the Diffusion Distance introduced earlier between probability distributions centered at those points, meaning Euclidean distance in diffusion space corresponds to diffusion distance in data space.
+\\
+
+
+Here is a summarization of the algorithm in four steps for clarification/simplification:
+
+\begin{enumerate}
+    \item \textbf{Affinity Matrix (\(W\)) Construction:}
+    We first construct an affinity matrix \(W\). The affinity between two points \(x_i\) and \(x_j\) is a measure of their similarity and is typically computed using a Gaussian kernel:
+    \[ W_{ij} = \exp\left(-\frac{\|x_i - x_j\|^2}{2\sigma^2}\right) \]
+    where \(\sigma\) is a user-defined parameter controlling the width of the Gaussian kernel.
+
+    \item \textbf{Transition Probability Matrix (\(P\)) Construction:}
+    Define the transition matrix \(K\) as a doubly-stochastic matrix, obtained by normalizing \(W\) row-wise:
+    \[ K_{ij} = \frac{W_{ij}}{\sum_{j'} W_{ij'}} \]
+    Then, define the symmetric matrix \(P\) as:
+    \[ P = (D^{-1/2})K(D^{-1/2}) \]
+    where \(D\) is a diagonal matrix with elements \(D_{ii} = \sum_{j} K_{ij}\).
+
+    \item \textbf{Eigenvalue Decomposition of the Transition Matrix (\(P\)):}
+    Perform the eigenvalue decomposition of \(P\) to obtain the eigenvalues \(\lambda_i\) and corresponding eigenvectors \(\phi_i\):
+    \[ P\phi_i = \lambda_i \phi_i \]
+
+    \item \textbf{Eigenvalues Selection and Diffusion Map (\(Y\)) Construction:}
+    Choose a subset of the eigenvectors based on the corresponding eigenvalues. These eigenvectors form the columns of the matrix \(\Phi\). The diffusion map \(Y\) is then obtained by stacking the chosen eigenvectors:
+    \[ \tilde{Y} = [\phi_1, \phi_2, \ldots, \phi_k] \]
+    The choice of \(k\) is typically determined by examining the decay of the eigenvalues.
+\end{enumerate}
+
+The diffusion map \(\tilde{Y}\) obtained in the last step serves as a lower-dimensional representation of the original data. Points that are close in the diffusion map space are considered similar in the original high-dimensional space. \\
+
+
+%Review/summary of the paper%

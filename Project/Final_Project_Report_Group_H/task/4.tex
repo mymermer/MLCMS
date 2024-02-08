@@ -1,0 +1,111 @@
+% We'll compare the values obtained for different metrics (distances, embedding, Riemannian Metric) to assess quality performance differences between the two packages. Context and different parameters used (in dataset size and dimensions in particular) will also be taken into account to nuance our statements. 
+
+% Distances: Compare how distances between points in the high-dimensional space are preserved in the low-dimensional embeddings.
+
+% Embedding Quality: Evaluate the embeddings visually (if 2D or 3D) and statistically (e.g., using metrics like trustworthiness or continuity).
+
+% Riemannian Metric: If the methods involve calculating a Riemannian metric (which provides a way to measure geometric properties of the data manifold), compare these metrics. This might require advanced mathematical computations.
+
+% -----------------------------
+
+% Megaman: RiemannianMetric: This class produces the estimated Riemannian metric Ri at each
+% point i given an embedding y1:N and the estimated Laplacian from the original data.
+
+We considered different metrics to use for comparison of our results to the ones specified in the paper. Since we cannot precisely recreate the same level of accuracy, comparing the runtime to the one in the paper is not an option. Instead, we took a look at the Riemannian metric as well as trustworthiness. \\
+
+\textbf{Riemannian metric} \\
+"A Riemannian metric g is a symmetric and positive definite tensor field which defines an inner product $<,>_g$ on the tangent space $T_p\M$ for every $p \in \M$." \cite{perrauljoncas2013nonlinear}
+
+It is used to define distances and angles on a smooth manifold, which is a generalization of surfaces to higher dimensions. Mathematically, a Riemannian metric on a manifold M is often denoted by a positive definite symmetric bilinear form g, defined on the tangent space at each point:\\
+
+$g_p : T_pM \times T_pM \rightarrow \R$ \\
+
+Here, $T_pM$ is the tangent space at a point $p$ on the manifold, and $g_p$ is the Riemannian metric at that point. 
+The Riemannian metric allows for the calculation of lengths of curves, angles between curves, and various other geometric properties of the manifold. \\
+
+We ultimately decided to use trustworthiness which is an easy concept to grasp. Additionally, it has the advantage that we can use one metric for all algorithms used in our project. \\
+
+\textbf{Trustworthiness} \cite{trust-sk} \\
+Trustworthiness is a score that displays to what extent the local structure is maintained. It is always a floating point number within [0, 1] and can be computed as follows: 
+\begin{equation}
+    T(k) = 1 - \frac{2}{nk(2n-3k-1)} \sum_{i=1}^{n} \sum_{j \in \N_i^k} max(0, (r(i,j)-k))
+\end{equation}
+
+For each sample i, its k nearest neighbors in the output space are denoted as $\N_i^k$,
+and every sample j is its $r(i,j)$-th nearest neighbor in the input space. This means that any unanticipated nearest neighbors in the output space are penalised in proportion to their rank in the input space. \\
+
+This metric needs to calculate the distance matrix for each point in the dataset which becomes a problem as our memory is not big enough to store this calculated matrix. In order to get a general idea of trustworthiness, we employed mini batching. We picked a subset of 10,000 vectors and calculated the trustworthiness of this smaller subset and finally calculated the mean of all of the subsets to find an approximate trustworthiness metric. This approach may not be very suitable as we need to look at the entire dataset to calculate our metric, but it gives us an approximate value to compare. \\
+
+\textbf{Timings}\\
+We can also compare the runtime between different libraries by utilizing one standard computer and recording the runtime. Although this is not a very good way of comparing the libraries and the neural network, it can provide us with an insight into the libraries' performances. We used Google Colab which provides us with 12.7 GB of memory to run our code and record the runtime for calculation of embeddings.\\
+
+
+\textbf{Comparisons}\\
+We show comparison values only for the \textit{Swiss Roll Curve} dataset. We decided not to include the Word2Vec dataset as the results were unsatisfactory.
+\begin{itemize}
+    \item \textbf{Trustworthiness}\\
+    Table \ref{tab:library-comparison} shows the different values of trustworthiness scores obtained by different libraries and approaches. The empty cells for 1M points show that the libraries were unable to run on the big datasets. Generally, an improvement from using 10k points can be recognized when using 100k points instead. The best trustworthiness scores for 100k and 1M points are highlighted in their corresponding columns. 
+    \begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Library Name} & \textbf{10k Points} & \textbf{100k Points} & \textbf{1M Points} \\
+        \hline
+        \hline
+        Sklearn & 0.5001 & 0.9916 & - \\
+        \hline
+        Datafold & 0.9993 & 0.9992 & - \\
+        \hline
+        Datafold (Roseland) & 0.9993 & \textbf{0.9993} & 0.9989 \\
+        \hline
+        UMAP & \textbf{0.9998} & 0.9801 & - \\
+        \hline
+        Autoencoder & 0.9994 & 0.9986 & \textbf{0.9991} \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of Libraries on Different Datasets}
+    \label{tab:library-comparison}
+\end{table}
+    \item \textbf{Timings}\\
+    Table \ref{tab:library-comparison-timings} shows the timings taken by different libraries to calculate the embeddings. We do not include UMAP here, as it uses GPU and would not be a fair comparison. Again, the empty cells for 1M represent that the library was not able to calculate the embeddings of the dataset. While Sklearn is by far the fastest library for 100k points, Datafold (Roseland) ranks second with less than one minute. Considering it also provides the best trustworthiness score, it can be seen as a winner on 100k points. For 1M points, however, Autoencoder performs better for both trustworthiness and computation time. \\
+    \begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Library Name} & \textbf{10k Points} & \textbf{100k Points} & \textbf{1M Points} \\
+        \hline
+        \hline
+        Sklearn & \textbf{1.3} & \textbf{10.0} & - \\
+        \hline
+        Datafold & 6.2 & 485.1 & - \\
+        \hline
+        Datafold (Roseland) & 6.9 & 51.3 & 4357.8 \\
+        \hline      
+        Autoencoder & 68.5 & 142 & \textbf{1282.7} \\
+        \hline
+    \end{tabular}
+    \caption{Time comparison of Libraries on Different Datasets(in seconds)}
+    \label{tab:library-comparison-timings}
+    \end{table}
+    \textit{Note: }The timings for Autoencoder is the training time for 50 epochs. 
+\end{itemize}
+
+
+% cuML also provides this metric within \texttt{cuml.metrics.trustworthiness} \cite{trust-cuml}, it can be called with the parameters listed below: 
+% \begin{itemize}
+%     \item X: array-like, shape = (n\_samples, n\_features) \\
+%     The original data
+%     \item X\_embedded: array-like, shape = (n\_samples, n\_features) \\
+%     The compromised low-dimensional data
+%     \item n\_neighbors: int, optional (default=5) \\
+%     Number of neighbors considered
+%     \item metric: str in ['euclidean'] (default='euclidean') \\
+%     Metric used to compute the trustworthiness. For the moment only ‘euclidean’ is supported
+%     \item convert\_dtype: bool, optional (default=False) \\
+%     When set to True, the trustworthiness method will automatically convert the inputs to np.float32
+%     \item batch\_size: int (default=512) \\
+%     The number of samples to use for each batch.
+% \end{itemize}
+% The \texttt{trustworthiness} function returns a double score. We specified X as well as X\_embedded and kept the other parameters as their default values. \\
+
+% With cuML's \texttt{trustworthiness}, we achieved the following results: 

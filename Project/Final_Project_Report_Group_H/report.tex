@@ -1,0 +1,92 @@
+\documentclass[10pt,a4paper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MODIFY:
+
+\newcommand{\authorA}{Hammad Basit (***REMOVED***)}
+\newcommand{\authorB}{Antonia Gobillard (***REMOVED***)}
+\newcommand{\authorC}{Nayeon Ahn (***REMOVED***)}
+\newcommand{\authorD}{Muhammed Yusuf Mermer (***REMOVED***)}
+\newcommand{\authorE}{Milena Schwarz (***REMOVED***)}
+\newcommand{\teamlead}{~\textbf{Project lead}}
+\newcommand{\groupNumber}{H} % - YOUR GROUP NUMBER
+\newcommand{\exerciseNumber}{6} % - THE NUMBER OF THE EXERCISE
+\newcommand{\sourceCodeLink}{\url{https://github.com/Hammad-7/MLCMS_Exercises/tree/main/Project}}
+
+\newcommand{\workPerAuthor}{
+\authorA \teamlead& Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorB & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorC & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorD & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+      \hline
+\authorE & Task 1&20\%\\
+      &Task 2&20\%\\
+      &Task 3&20\%\\
+      &Task 4&20\%\\
+      &Task 5&20\%\\
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./imports.tex}
+
+\begin{document}
+
+\frontpage
+
+In our final exercise, we chose to learn and visualize representations for large data sets. Specifically, we want to refer to the paper [McQueen et al., 2016] \cite{megaman}. 
+We will use different libraries to test their performance against each other and compare it to the package \texttt{megaman} that is used in the paper for scalable manifold learning. %to be changed% 
+\\
+
+% \begin{task}{Introduction and Motivation}
+\textbf{Introduction and Motivation}
+\vspace{5pt}
+\hrule
+\vspace{5pt}
+\input{intro/Intro.tex}
+% \end{task}
+
+\begin{task}{1, Description of the datasets}
+\input{task/1.tex}
+\end{task}
+
+\begin{task}{2, Implementation of the SpectralEmbedding method}
+\input{task/2.tex}
+\end{task}
+
+\begin{task}{3, Description of the libraries used}
+\input{task/3.tex}
+\end{task}
+
+\newpage
+\begin{task}{4, Metrics and Comparison}
+\input{task/4.tex}
+\end{task}
+
+\begin{task}{5, Conclusion and future work}
+\input{task/5.tex}
+\end{task}
+
+\bibliographystyle{plain}
+\bibliography{Literature}
+
+\end{document}
