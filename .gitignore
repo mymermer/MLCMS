@@ -1,17 +1,4 @@
-# Comments start with a '#' symbol
-# Ignore specific files or directories
-
-#changes you made on previous exercise folders will not be send to remote repo (GitHub) and left on your computer
-Exercise01/  
-Exercise02/
-Exercise03/
-
-
-#vadere application files are stored in this directory, which will not be pushed to repo
 vadere/
-
-#you can make exceptions with putting "!" before file name. 
-#no need to push everything with exception, however if you want to push for once use: git add -f "directory of file"
 
 
 #ignore pycache files produced by python
