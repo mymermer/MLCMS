@@ -42,6 +42,6 @@ This coursework was completed with the collaboration and effort of the following
 - [Milena Schwarz](https://github.com/misc99s)
 - [Antonia Gobillard](https://github.com/antoniagbrd)
 - [Nayeon Ahn](https://github.com/annaaa4701)
-- [Muhammed Yusuf Mermer]
+- Muhammed Yusuf Mermer
 
 Special thanks to our instructor for their guidance and support throughout this course.
